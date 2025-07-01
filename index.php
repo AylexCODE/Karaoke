@@ -32,8 +32,11 @@
             <main>
                 <span id="main_activation_area" onmouseenter="controls_state(0)"></span>
                 <span class="filler"></span>
-                <iframe id="youtube" allow="autoplay" frameborder="0"></iframe>
-                <iframe id="youtubee" allow="autoplay" frameborder="0"></iframe>
+                <span id="video_player1_wrapper">
+                    <div id="video_player1"></div>
+                </span>
+                <span id="video_player2_wrapper"><div id="video_player2"></div>
+                </span>
                 <span class="filler"></span>
                 <p id="main_message">Start The Party!!!</p>
             </main>
@@ -55,7 +58,7 @@
                     <li></li>
                     <li></li>
                 </ul>
-            </div >
+            </div>
         </section>
     </body>
     <script type="text/javascript">
@@ -64,11 +67,14 @@
         const main_video = document.getElementsByTagName("main")[0];
         const main_video_filler = document.getElementsByClassName("filler");
         const main_message = document.getElementById("main_message");
-        const youtube = document.getElementById("youtube");
-        const youtubee = document.getElementById("youtubee");
-
+        const player1_wrapper = document.getElementById("video_player1_wrapper");
+        const player2_wrapper = document.getElementById("video_player2_wrapper");
+        
         const in_queue = [];
-        let play_timer, video_player = 1, isPlaying = false;
+        let play_timer, video_player1, video_player2, video_player = 1, isPlaying = false, players_status = {
+            player1: "available",
+            player2: "available"
+        }
         
         function controls_state(state){
             if(state == 1){
@@ -100,23 +106,84 @@
                 }
             });
         }
+        
+        function play(event, player){
+            console.log(event.data, event.data == YT.PlayerState.ENDED, player);
+            if(event.data == YT.PlayerState.ENDED || event.data == YT.PlayerState.CUED){
+                if(player == 1){
+                    player1_wrapper.style.visibility = "hidden";
+                    player2_wrapper.style.visibility = "visible";
+                }else{
+                    player1_wrapper.style.visibility = "visible";
+                    player2_wrapper.style.visibility = "hidden";
+                }
+            }
+            if(event.data == YT.PlayerState.ENDED || event.data == YT.PlayerState.CUED){
+                players_status[`player${player}`] = "available";
+                set_queue();
+            }
+        }
 
-        function play(video_id){
-            if(!isPlaying) isPlaying = true;
-            main_message.style.visibility = "hidden";
-
+        function set_player(video_id, duration){
             if(video_player == 1){
-                youtube.setAttribute("src", `https://www.youtube.com/embed/${video_id}?controls=0&autoplay=1&rel=0`);
                 video_player = 2;
-                setTimeout(() => {
-                    youtube.style.visibility= "visible";
-                }, 2000);
+
+                if(!video_player1){
+                    video_player1 = new YT.Player('video_player1', {
+                        height: "100%",
+                        width: "100%",
+                        videoId: video_id,
+                        playerVars: {
+                            'playsinline': 1,
+                            'controls': 0,
+                            'rel': 0
+                        },
+                        events: {
+                            'onReady': (event) => event.target.playVideo(),
+                            'onStateChange': (event) => {
+                                play(event, 1);
+                            }
+                        }
+                    });
+
+                    setTimeout(() => {
+                        video_player1.stopVideo();
+                    }, 10000);
+                }else{
+                    video_player1.loadVideoById(video_id);
+                }
+
+                players_status.player1 = "unavailable";
             }else{
-                youtubee.setAttribute("src", `https://www.youtube.com/embed/${video_id}?controls=0&autoplay=1&rel=0`);
                 video_player = 1;
-                setTimeout(() => {
-                    youtubee.style.visibility = "visible";
-                }, 2000);
+
+                if(!video_player2){
+                    video_player2 = new YT.Player('video_player2', {
+                        height: "100%",
+                        width: "100%",
+                        videoId: video_id,
+                        playerVars: {
+                            'playsinline': 1,
+                            'controls': 0,
+                            'rel': 0
+                        },
+                        events: {
+                            'onStateChange': (event) => {
+                                play(event, 2);
+                            }
+                        }
+                    });
+                }else{
+                    video_player2.loadVideoById(video_id);
+                }
+
+                players_status.player2 = "unavailable";
+            }
+
+            if(!isPlaying){
+                isPlaying = true;
+                main_message.style.visibility = "hidden";
+                player1_wrapper.style.visibility = "visible";
             }
         }
 
@@ -128,25 +195,22 @@
                 videoId: s_video_id
             });
 
-            set_queue(false);
+            set_queue();
         }
 
-        function set_queue(next){
-            if(!isPlaying || next){
-                if(in_queue.length > 0){
-                    play(in_queue[0].videoId);
-                    clearTimeout(play_timer);
-                    play_timer = setTimeout(() => {
-                        set_queue(true);
-                        if(video_player == 1){
-                            youtube.style.visibility = "hidden";
-                        }else{
-                            youtubee.style.visibility = "hidden";
-                        }
-                    }, in_queue.shift().duration * 1000);
-                }else{
-                    isPlaying = false;
+        function set_queue(){
+            if(in_queue.length > 0){
+                if(players_status.player1 == "available" || players_status.player2 == "available"){
+                    const song_info = in_queue.shift();
+                    set_player(song_info.videoId);
                 }
+                    /*clearTimeout(play_timer);
+
+                    play_timer = setTimeout(() => {
+
+                    }, (song_info.duration * 1000) - 30000);*/
+            }else{
+                isPlaying = false;
             }
         }
         /*
@@ -156,5 +220,10 @@
 
 //document.getElementsByTagName("main")[0].appendChild(iframe);
 }*/
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
 </html>
