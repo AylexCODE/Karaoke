@@ -71,10 +71,10 @@
         const player2_wrapper = document.getElementById("video_player2_wrapper");
         
         const in_queue = [];
-        let play_timer, video_player1, video_player2, video_player = 1, isPlaying = false, players_status = {
+        let play_timer, video_player1, video_player2, isPlaying = false, active_player = 1, firstSong = true, players_status = {
             player1: "available",
             player2: "available"
-        }
+        };
         
         function controls_state(state){
             if(state == 1){
@@ -108,26 +108,46 @@
         }
         
         function play(event, player){
-            console.log(event.data, event.data == YT.PlayerState.ENDED, player);
-            if(event.data == YT.PlayerState.ENDED || event.data == YT.PlayerState.CUED){
+            console.log(event.data, player, in_queue);
+            if(event.data == YT.PlayerState.PLAYING){
                 if(player == 1){
-                    player1_wrapper.style.visibility = "hidden";
-                    player2_wrapper.style.visibility = "visible";
-                }else{
                     player1_wrapper.style.visibility = "visible";
                     player2_wrapper.style.visibility = "hidden";
+                }else{
+                    player1_wrapper.style.visibility = "hidden";
+                    player2_wrapper.style.visibility = "visible";
                 }
             }
-            if(event.data == YT.PlayerState.ENDED || event.data == YT.PlayerState.CUED){
+            
+            if(event.data == YT.PlayerState.ENDED){
+                if(active_player == 1){
+                    if(video_player2) video_player2.playVideo();
+                    video_player1.stopVideo();
+                    active_player = 2;
+                }else{
+                    video_player1.playVideo();
+                    video_player2.stopVideo();
+                    active_player = 1;
+                }
+
                 players_status[`player${player}`] = "available";
-                set_queue();
+
+                if(players_status.player1 == "available" && players_status.player2 == "available"){
+                    isPlaying = false;
+                    main_message.style.display = "block";
+                }else{
+                    set_queue();
+                }
+            }
+
+            if(firstSong){
+                video_player1.playVideo();
+                firstSong = false;
             }
         }
 
         function set_player(video_id, duration){
-            if(video_player == 1){
-                video_player = 2;
-
+            if(players_status.player1 == "available"){
                 if(!video_player1){
                     video_player1 = new YT.Player('video_player1', {
                         height: "100%",
@@ -136,27 +156,19 @@
                         playerVars: {
                             'playsinline': 1,
                             'controls': 0,
-                            'rel': 0
+                            'rel': 0,
                         },
                         events: {
-                            'onReady': (event) => event.target.playVideo(),
-                            'onStateChange': (event) => {
-                                play(event, 1);
-                            }
+                            'onReady': (event) => play(event, 1),
+                            'onStateChange': (event) => play(event, 1)
                         }
                     });
-
-                    setTimeout(() => {
-                        video_player1.stopVideo();
-                    }, 10000);
                 }else{
                     video_player1.loadVideoById(video_id);
                 }
 
                 players_status.player1 = "unavailable";
             }else{
-                video_player = 1;
-
                 if(!video_player2){
                     video_player2 = new YT.Player('video_player2', {
                         height: "100%",
@@ -179,12 +191,6 @@
 
                 players_status.player2 = "unavailable";
             }
-
-            if(!isPlaying){
-                isPlaying = true;
-                main_message.style.visibility = "hidden";
-                player1_wrapper.style.visibility = "visible";
-            }
         }
 
         function add_queue(s_title, s_artist, s_duration, s_video_id){
@@ -194,13 +200,17 @@
                 duration: s_duration,
                 videoId: s_video_id
             });
-
+console.log(s_title)
             set_queue();
         }
 
         function set_queue(){
             if(in_queue.length > 0){
                 if(players_status.player1 == "available" || players_status.player2 == "available"){
+                    console.log(in_queue);
+                    isPlaying = true;
+                    main_message.style.display = "none";
+
                     const song_info = in_queue.shift();
                     set_player(song_info.videoId);
                 }
@@ -209,8 +219,6 @@
                     play_timer = setTimeout(() => {
 
                     }, (song_info.duration * 1000) - 30000);*/
-            }else{
-                isPlaying = false;
             }
         }
         /*

@@ -214,29 +214,29 @@ main > .filler.active {
     right: 0; top: 0;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 10;
 }
 
-main > iframe {
+main > #video_player1_wrapper, main > #video_player2_wrapper {
+    position: absolute;
     height: 100%;
     width: 100%;
-    position: absolute;
     top: 0;
     right: 0;
 }
 
-main > #youtube {
+main > #video_player1_wrapper {
     visibility: hidden;
 }
 
-main > #youtubee {
+main > #video_player2_wrapper {
     visibility: hidden;
 }
 
 #main_message {
     position: fixed;
     top: calc((100dvh - 3rem)/2);
-    visibility: visible;
+    display: block;
     font-size: 3rem;
     font-weight: bold;
     font-family: space-grotest-semibold, monospace;
