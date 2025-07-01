@@ -32,10 +32,8 @@
             <main>
                 <span id="main_activation_area" onmouseenter="controls_state(0)"></span>
                 <span class="filler"></span>
-                <span id="video_player1_wrapper">
-                    <div id="video_player1"></div>
-                </span>
-                <span id="video_player2_wrapper"><div id="video_player2"></div>
+                <span id="video_player_wrapper">
+                    <div id="video_player"></div>
                 </span>
                 <span class="filler"></span>
                 <p id="main_message">Start The Party!!!</p>
@@ -43,7 +41,7 @@
             <span id="options_activation_area" onmouseenter="controls_state(1)"></span>
             <article>
                 <p>Search</p>
-                <p>Info</p>
+                <p id="current_queue">Queue</p>
             </article>
             <div class="area" >
                 <ul class="circles">
@@ -67,14 +65,9 @@
         const main_video = document.getElementsByTagName("main")[0];
         const main_video_filler = document.getElementsByClassName("filler");
         const main_message = document.getElementById("main_message");
-        const player1_wrapper = document.getElementById("video_player1_wrapper");
-        const player2_wrapper = document.getElementById("video_player2_wrapper");
         
         const in_queue = [];
-        let play_timer, video_player1, video_player2, isPlaying = false, active_player = 1, firstSong = true, players_status = {
-            player1: "available",
-            player2: "available"
-        };
+        let video_player, isPlaying = false;
         
         function controls_state(state){
             if(state == 1){
@@ -107,7 +100,7 @@
             });
         }
         
-        function play(event, player){
+      /*  function play(event, player){
             console.log(event.data, player, in_queue);
             if(event.data == YT.PlayerState.PLAYING){
                 if(player == 1){
@@ -145,51 +138,38 @@
                 firstSong = false;
             }
         }
-
-        function set_player(video_id, duration){
-            if(players_status.player1 == "available"){
-                if(!video_player1){
-                    video_player1 = new YT.Player('video_player1', {
-                        height: "100%",
-                        width: "100%",
-                        videoId: video_id,
-                        playerVars: {
-                            'playsinline': 1,
-                            'controls': 0,
-                            'rel': 0,
-                        },
-                        events: {
-                            'onReady': (event) => play(event, 1),
-                            'onStateChange': (event) => play(event, 1)
-                        }
-                    });
-                }else{
-                    video_player1.loadVideoById(video_id);
-                }
-
-                players_status.player1 = "unavailable";
-            }else{
-                if(!video_player2){
-                    video_player2 = new YT.Player('video_player2', {
-                        height: "100%",
-                        width: "100%",
-                        videoId: video_id,
-                        playerVars: {
-                            'playsinline': 1,
-                            'controls': 0,
-                            'rel': 0
-                        },
-                        events: {
-                            'onStateChange': (event) => {
-                                play(event, 2);
+*/
+        function set_player(video_id){
+            if(!video_player){
+                video_player = new YT.Player('video_player', {
+                    height: "100%",
+                    width: "100%",
+                    videoId: video_id,
+                    playerVars: {
+                        'playsinline': 1,
+                        'controls': 0,
+                        'rel': 0,
+                    },
+                    events: {
+                        'onReady': (event) => {
+                            event.target.playVideo();
+                            $("#video_player_wrapper").css("visibility", "visible");
+                            },
+                        'onStateChange': (event) => {
+                            console.log(event);
+                            if(event.data == YT.PlayerState.ENDED && in_queue.length == 0){
+                                main_message.style.display = "block";
+                                $("#video_player_wrapper").css("visibility", "hidden");
+                                isPlaying = false;
+                            }else if(event.data == YT.PlayerState.ENDED){
+                                set_queue(true);
                             }
                         }
-                    });
-                }else{
-                    video_player2.loadVideoById(video_id);
-                }
-
-                players_status.player2 = "unavailable";
+                    }
+                });
+            }else{
+                $("#video_player_wrapper").css("visibility", "visible");
+                video_player.loadVideoById(video_id);
             }
         }
 
@@ -200,26 +180,28 @@
                 duration: s_duration,
                 videoId: s_video_id
             });
-console.log(s_title)
-            set_queue();
+
+            set_queue(false);
         }
 
-        function set_queue(){
-            if(in_queue.length > 0){
-                if(players_status.player1 == "available" || players_status.player2 == "available"){
-                    console.log(in_queue);
-                    isPlaying = true;
-                    main_message.style.display = "none";
+        function set_queue(next){
+            if((in_queue.length > 0 && !isPlaying) || next){
+                main_message.style.display = "none";
+                const song_info = in_queue.shift();
+                set_player(song_info.videoId);
+                isPlaying = true;
+            }
 
-                    const song_info = in_queue.shift();
-                    set_player(song_info.videoId);
-                }
+                let queue_elements = "";
+                in_queue.forEach((song) => {
+                    queue_elements += `<span><p>${song.title}</p><p>${song.artist}</}</span>`;
+                });
+                $("#current_queue").html(queue_elements);
                     /*clearTimeout(play_timer);
 
                     play_timer = setTimeout(() => {
 
                     }, (song_info.duration * 1000) - 30000);*/
-            }
         }
         /*
             youtube.setAttribute("frameborder", "0");

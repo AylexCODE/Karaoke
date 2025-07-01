@@ -217,19 +217,12 @@ main > .filler.active {
     z-index: 10;
 }
 
-main > #video_player1_wrapper, main > #video_player2_wrapper {
+main > #video_player_wrapper {
     position: absolute;
     height: 100%;
     width: 100%;
     top: 0;
     right: 0;
-}
-
-main > #video_player1_wrapper {
-    visibility: hidden;
-}
-
-main > #video_player2_wrapper {
     visibility: hidden;
 }
 
