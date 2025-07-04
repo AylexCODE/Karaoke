@@ -31,7 +31,7 @@ body{
 
 body, main > span:nth-child(2), main > span:nth-child(4){
     background: linear-gradient(315deg, rgba(101,0,94,1) 3%, rgba(60,132,206,1) 38%, rgba(48,238,226,1) 68%, rgba(255,25,25,1) 98%);
-    animation: gradient 15s ease infinite;
+    animation: gradient 60s ease infinite;
     background-size: 400% 400%;
     background-attachment: fixed;
 }
@@ -53,12 +53,91 @@ body, main > span:nth-child(2), main > span:nth-child(4){
     height: 100dvh;
     width: 100dvw;
     display: grid;
-    place-items: center;
+    z-index: 100;
+    pointer-events: none;
 }
 
-.loading_screen > span {
+.loading_screen > span:nth-child(1) {
+    position: absolute;
+    top: 0; left: 0;
+    background-color: hsl(280deg 100% 99%);
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    animation: loading_anim 6s linear;
+}
+
+.loading_screen > span:nth-child(2){
+    position: absolute;
+    too: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading_screen > span:nth-child(2) > span:nth-child(1){
+    color: #A29BFE;
+    opacity: 0;
+    animation: loading_anim2 7s linear;
+}
+
+.loading_screen > span:nth-child(2) > span:nth-child(2){
+    height: 1rem;
+    opacity: 0;
+    width: 80%;
+    margin-top: 0.5rem;
+    border: 1px solid #DFE6E9;
+    background-color: #DFE6E9;
+    animation: loading_anim2 6s linear;
+}
+
+.loading_bar {
+    height: 100%;
+    width: 100%;
+    background-color: #A29BFE;
+    animation: loading_bar 5s ease-in-out;
+}
+
+.loading_screen > span:nth-child(2) > span {
     display: flex;
     flex-direction: row;
+}
+
+@keyframes loading_anim {
+    0%, 80% {
+        opacity: 1;
+        background-color: hsl(280deg 100% 99%);
+    }
+
+    85% {
+        background-color: hsl(285deg 100% 50%);
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes loading_anim2 {
+    0%, 85% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes loading_bar {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
+    }
 }
 
 @property --song-count {
@@ -280,7 +359,7 @@ article {
     width: 20px;
     height: 20px;
     background: rgba(255, 255, 255, 0.2);
-    animation: animate 25s linear infinite;
+    animation: animate 90s linear infinite;
     bottom: -150px;
     
 }
@@ -297,15 +376,15 @@ article {
     left: 10%;
     width: 20px;
     height: 20px;
-    animation-delay: 2s;
-    animation-duration: 12s;
+    animation-delay: 30s;
+    animation-duration: 50s;
 }
 
 .circles li:nth-child(3){
     left: 70%;
     width: 20px;
     height: 20px;
-    animation-delay: 4s;
+    animation-delay: 60s;
 }
 
 .circles li:nth-child(4){
@@ -313,7 +392,7 @@ article {
     width: 60px;
     height: 60px;
     animation-delay: 0s;
-    animation-duration: 18s;
+    animation-duration: 120s;
 }
 
 .circles li:nth-child(5){
@@ -327,21 +406,21 @@ article {
     left: 75%;
     width: 110px;
     height: 110px;
-    animation-delay: 3s;
+    animation-delay: 70s;
 }
 
 .circles li:nth-child(7){
     left: 35%;
     width: 150px;
     height: 150px;
-    animation-delay: 7s;
+    animation-delay: 40s;
 }
 
 .circles li:nth-child(8){
     left: 50%;
     width: 25px;
     height: 25px;
-    animation-delay: 15s;
+    animation-delay: 60s;
     animation-duration: 45s;
 }
 
@@ -349,8 +428,8 @@ article {
     left: 20%;
     width: 15px;
     height: 15px;
-    animation-delay: 2s;
-    animation-duration: 35s;
+    animation-delay: 90s;
+    animation-duration: 90s;
 }
 
 .circles li:nth-child(10){
@@ -358,13 +437,10 @@ article {
     width: 150px;
     height: 150px;
     animation-delay: 0s;
-    animation-duration: 11s;
+    animation-duration: 70s;
 }
 
-
-
 @keyframes animate {
-
     0%{
         transform: translateY(0) rotate(0deg);
         opacity: 1;
@@ -376,6 +452,15 @@ article {
         opacity: 0;
         border-radius: 50%;
     }
+}
 
+@keyframes beat {
+    0%, 50%, 100% {
+        transform: scale(1, 1);
+    }
+
+    30%, 80% {
+        transform: scale(0.92, 0.95);
+    }
 }
 </style>
