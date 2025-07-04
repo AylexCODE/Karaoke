@@ -10,6 +10,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="./vendor/jquery-3.7.1.min.js"></script>
+        <script src="./vendor/socketio-4.8.1.min.js"></script>
         <link rel="icon" href="./assets/logo.png" type="image/x-icon">
       <!--  <meta http-equiv="refresh" content="2; url='./main'" />-->
         <title>Karaoke</title>
@@ -17,7 +18,14 @@
     <body>
         <section class="loading_screen">
             <span>
-                <p>Found&nbsp;<span class="song_count"></p>&nbsp;Songs</p>
+            </span>
+            <span>
+                <span>
+                    <p>Found&nbsp;<p class="song_count"></p>&nbsp;Songs</p>
+                </span>
+                <span>
+                    <span class="loading_bar"></span>
+                </span>
             </span>
         </section>
         <section class="main">
@@ -36,11 +44,10 @@
                     <div id="video_player"></div>
                 </span>
                 <span class="filler"></span>
-                <p id="main_message">Start The Party!!!</p>
+                <p id="main_message"></p>
             </main>
             <span id="options_activation_area" onmouseenter="controls_state(1)"></span>
             <article>
-                <p>Search</p>
                 <p id="current_queue">Queue</p>
             </article>
             <div class="area" >
@@ -156,19 +163,22 @@
                             $("#video_player_wrapper").css("visibility", "visible");
                             },
                         'onStateChange': (event) => {
-                            console.log(event);
+                            yt_player_logging(event.data);
                             if(event.data == YT.PlayerState.ENDED && in_queue.length == 0){
                                 main_message.style.display = "block";
                                 $("#video_player_wrapper").css("visibility", "hidden");
                                 isPlaying = false;
                             }else if(event.data == YT.PlayerState.ENDED){
+                                $("#video_player_wrapper").css("visibility", "hidden");
                                 set_queue(true);
+                            }else if(event.data == YT.PlayerState.PLAYING){
+                                $("#video_player_wrapper").css("visibility", "visible");
                             }
                         }
                     }
                 });
             }else{
-                $("#video_player_wrapper").css("visibility", "visible");
+                //$("#video_player_wrapper").css("visibility", "visible");
                 video_player.loadVideoById(video_id);
             }
         }
@@ -210,6 +220,39 @@
 
 //document.getElementsByTagName("main")[0].appendChild(iframe);
 }*/
+        const main_msg_template = "START THE PARTY!!!";
+        const main_msg_write_delay = [100, 100, 150, 100, 100, 100, 50, 100, 100, 100, 150, 50, 100, 100, 150, 50, 100, 200];
+        function set_main_message(i){
+            if(i == 18) return;
+            setTimeout(() => {
+                main_message.innerHTML = main_msg_template.slice(0, i);
+                set_main_message(++i);
+            }, main_msg_write_delay[i]);
+        }
+
+        setTimeout(() => set_main_message(0), 7000);
+
+        function yt_player_logging(event){
+            switch(event){
+                case -1: console.log("Unstarted"); break;
+                case 0: console.log("Ended"); break;
+                case 1: console.log("Playing"); break;
+                case 2: console.log("Paused"); break;
+                case 3: console.log("Buffering"); break;
+                case 5: console.log("Cued"); break;
+            }
+        }
+
+        const socket = io('https://socketio-f317.onrender.com');
+        
+        socket.on('connect', () => {
+            $("#current_queue").html('Realtime Update is Active');
+});
+
+        socket.on('disconnect', () => {
+            $("#current_queue").html('Realtime is not realtiming');
+});
+
         var tag = document.createElement('script');
 
         tag.src = "https://www.youtube.com/iframe_api";
