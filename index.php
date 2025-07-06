@@ -12,7 +12,6 @@
         <script src="./vendor/jquery-3.7.1.min.js"></script>
         <script src="./vendor/socketio-4.8.1.min.js"></script>
         <link rel="icon" href="./assets/logo.png" type="image/x-icon">
-      <!--  <meta http-equiv="refresh" content="2; url='./main'" />-->
         <title>Karaoke</title>
     </head>
     <body>
@@ -73,12 +72,14 @@
             </div>
         </section>
     </body>
+    <script type="text/javascript" src="./scripts/socketio.js"></script>
     <script type="text/javascript">
         const nav = document.getElementsByTagName("nav")[0];
         const nav_info = document.getElementsByTagName("article")[0];
         const main_video = document.getElementsByTagName("main")[0];
         const main_message = document.getElementById("main_message");
         const notification_wrapper = document.getElementById("notification_wrapper");
+        const randomId = Math.floor(Math.random() * 4000);
         
         const in_queue = [];
         let video_player, isPlaying = false;
@@ -118,6 +119,17 @@
             });
 
             notification_wrapper.innerHTML = "";
+            socket.emit('createConnection', randomId);
+
+            socket.on('receivedMessage', (message) => {
+                console.log(message);
+            })
+
+            setTimeout(() => {
+                socket.emit('connectToConnection', randomId);
+            }, 3000);
+
+            console.log(randomId)
         }
         
         function set_player(video_id){
@@ -135,9 +147,10 @@
                         'onReady': (event) => {
                             event.target.playVideo();
                             $("#video_player_wrapper").css("visibility", "visible");
-                            },
+                        },
                         'onStateChange': (event) => {
                             yt_player_logging(event.data);
+
                             if(event.data == YT.PlayerState.ENDED && in_queue.length == 0){
                                 main_message.style.display = "block";
                                 $("#video_player_wrapper").css("visibility", "hidden");
@@ -214,16 +227,6 @@
                 case 5: console.log("Cued"); break;
             }
         }
-
-        const socket = io('https://socketio-f317.onrender.com');
-        
-        socket.on('connect', () => {
-            $("#current_queue").html('Realtime Update is Active');
-});
-
-        socket.on('disconnect', () => {
-            $("#current_queue").html('Realtime is not realtiming');
-});
 
         var tag = document.createElement('script');
 
