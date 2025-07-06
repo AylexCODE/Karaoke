@@ -18,9 +18,9 @@
     user-select: none;
 }
 
-/*::-webkit-scrollbar {
+::-webkit-scrollbar {
     display: none;
-}*/
+}
 
 body{
     height: 100dvh;
@@ -48,7 +48,7 @@ body {
     }
 }
 
-.loading_screen {
+.loadingScreen {
     position: fixed;
     height: 100dvh;
     width: 100dvw;
@@ -57,7 +57,7 @@ body {
     pointer-events: none;
 }
 
-.loading_screen > span:nth-child(1) {
+.loadingScreen > span:nth-child(1) {
     position: absolute;
     top: 0; left: 0;
     background-color: hsl(280deg 100% 99%);
@@ -67,7 +67,7 @@ body {
     animation: loading_anim 6s linear;
 }
 
-.loading_screen > span:nth-child(2){
+.loadingScreen > span:nth-child(2){
     position: absolute;
     too: 0; left: 0;
     width: 100%;
@@ -78,13 +78,13 @@ body {
     align-items: center;
 }
 
-.loading_screen > span:nth-child(2) > span:nth-child(1){
+.loadingScreen > span:nth-child(2) > span:nth-child(1){
     color: #A29BFE;
     opacity: 0;
     animation: loading_anim2 7s linear;
 }
 
-.loading_screen > span:nth-child(2) > span:nth-child(2){
+.loadingScreen > span:nth-child(2) > span:nth-child(2){
     height: 1rem;
     opacity: 0;
     width: 80%;
@@ -94,14 +94,14 @@ body {
     animation: loading_anim2 6s linear;
 }
 
-.loading_bar {
+.loadingBar {
     height: 100%;
     width: 100%;
     background-color: #A29BFE;
-    animation: loading_bar 5s ease-in-out;
+    animation: loadingBar 5s ease-in-out;
 }
 
-.loading_screen > span:nth-child(2) > span {
+.loadingScreen > span:nth-child(2) > span {
     display: flex;
     flex-direction: row;
 }
@@ -131,7 +131,7 @@ body {
     }
 }
 
-@keyframes loading_bar {
+@keyframes loadingBar {
     from {
         width: 0%;
     }
@@ -140,31 +140,31 @@ body {
     }
 }
 
-@property --song-count {
+@property --songCount {
     syntax: "<integer>";
-    initial-value: <?php include("./components/song_count.php") ?>;
+    initial-value: <?php include("./components/songCount.php") ?>;
     inherits: false;
 }
 
-.song_count {
+.songCount {
     animation: counter 5s ease-in-out;
-    counter-reset: num var(--song-count);
+    counter-reset: num var(--songCount);
 }
 
-.song_count::after {
+.songCount::after {
     content: counter(num);
 }
 
 @keyframes counter {
     from{
-        --song-count: 0;
+        --songCount: 0;
     }
     to{
-        --song-count: <?php include("./components/song_count.php"); ?>;
+        --songCount: <?php include("./components/songCount.php"); ?>;
     }
 }
 
-#nav_activation_area {
+#navActivationArea {
     position: absolute;
     left: 0%; top: 0;
     width: 13.3%;
@@ -199,11 +199,11 @@ nav > span > span {
     text-align: center;
 }
 
-.is_searching {
+.isSearching {
     display: none;
 }
 
-.entries_found {
+.entriesFound {
     display: grid;
     place-items: center;
     width: 100%;
@@ -212,46 +212,46 @@ nav > span > span {
     border-radius: 15px;
 }
 
-.entries_found > .error, .entries_found > .ok {
+.entriesFound > .error, .entriesFound > .ok {
     padding-block: 3%;
     padding-inline: 7%;
     border-radius: 15px;
 }
 
-.entries_found > .error {
+.entriesFound > .error {
     background-color: #FFFF0020;
 }
 
-.entries_found > .ok {
+.entriesFound > .ok {
     background-color: #00FFFF20;
 }
 
-#song_list {
+#songList {
     width: 100%;
     height: 80%;
     overflow-y: scroll;
 }
 
-#song_list > span {
+#songList > span {
     display: block;
     padding: 1% 5% 1%;
 }
 
-#song_list > span > p {
+#songList > span > p {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-#song_list > span > p:nth-child(2){
+#songList > span > p:nth-child(2){
     font-size: .7rem;
 }
 
-#song_list > span:nth-child(odd){
+#songList > span:nth-child(odd){
     background-color: #FFFFFF20;
 }
 
-#song_list > span:nth-child(even){
+#songList > span:nth-child(even){
     background-color: #FFFFFF10;
 }
 
@@ -288,7 +288,7 @@ main > .filler.active {
     transition: opacity 5s ease-in;
 }
 
-#main_activation_area {
+#mainActivationArea {
     position: absolute;
     right: 0; top: 0;
     width: 100%;
@@ -296,7 +296,7 @@ main > .filler.active {
     z-index: 10;
 }
 
-main > #video_player_wrapper {
+main > #videoPlayerWrapper {
     position: absolute;
     height: 100%;
     width: 100%;
@@ -305,7 +305,7 @@ main > #video_player_wrapper {
     visibility: hidden;
 }
 
-#main_message {
+#mainMessage {
     position: fixed;
     top: calc((100dvh - 3rem)/2);
     display: block;
@@ -321,7 +321,7 @@ main > #video_player_wrapper {
     -webkit-text-fill-color: transparent;
 }
 
-#info_activation_area {
+#infoActivationArea {
     position: absolute;
     right: 0; bottom: 0;
     width: 86.7%;
@@ -334,13 +334,16 @@ article {
     right: 0; bottom: -20%;
     width: 100%;
     height: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     z-index: 5;
 }
 
-article > p:first-child {
+article > span > p:first-child {
     position: relative;
-    left: 0dvw;
+    left: -50dvw;
     margin-left: 1rem;
     color: #FFF;
     font-weight: bold;
@@ -348,11 +351,26 @@ article > p:first-child {
     transition: all 1s cubic-bezier(0.19, 1, 0.21, 1);
 }
 
-.current_queue {
+article > span:nth-child(2) {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0.2rem;
+    color: #FFF;
+    opacity: 0;
+}
+
+article > span > span {
+    display: flex;
+    flex-direction: row;
+}
+
+.currentQueue {
     position: relative;
 }
 
-.current_queue > span {
+.currentQueue > span {
     display: flex;
     flex-direction: column;
     margin: 0.5rem 1rem;
@@ -364,16 +382,16 @@ article > p:first-child {
     transition: all 0.5s cubic-bezier(0.19, 1, 0.21, 1);
 }
 
-.current_queue > span > p {
+.currentQueue > span > p {
     color: #FFF;
 }
 
-.current_queue > span > p:nth-child(2){
+.currentQueue > span > p:nth-child(2){
     font-size: 0.7rem;
     opacity: 0.8;
 }
 
-.current_queue.active > span:first-child{
+.currentQueue.active > span:first-child{
     animation: next_queue 1s cubic-bezier(0.19, 1, 0.21, 1);
 }
 
@@ -390,7 +408,7 @@ article > p:first-child {
     }
 }
 
-#notification_wrapper {
+#notificationWrapper {
     position: absolute;
     bottom: 21%;
     left: calc(0% + 1rem);
@@ -399,7 +417,7 @@ article > p:first-child {
     transition: all 0.5s cubic-bezier(0.19, 1, 0.21, 1);
 }
 
-#notification_wrapper > .notification {
+#notificationWrapper > .notification {
     position: relative;
     left: -50dvw;
     display: block;
@@ -407,10 +425,10 @@ article > p:first-child {
     border-radius: 1rem;
     overflow: hidden;
     background-color: #00000050;
-    animation: notification_animation 5.5s cubic-bezier(0.19, 1, 0.22, 1);
+    animation: notificationAnimation 5.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-#notification_wrapper > .notification > #notif_header {
+#notificationWrapper > .notification > #notifHeader {
     border-bottom: 1px solid #FFCF00;
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
@@ -418,28 +436,28 @@ article > p:first-child {
     color: #FFF;
 }
 
-#notification_wrapper > .notification > #notif_title {
+#notificationWrapper > .notification > #notifTitle {
     padding-top: 0.5rem;
     padding-inline: 1rem;
     color: #FFF;
 }
 
-#notification_wrapper > .notification > #notif_artist {
+#notificationWrapper > .notification > #notifArtist {
     color: #FFF;
     font-size: 0.7rem;
     padding-bottom: 0.5rem;
     padding-inline: 1rem;
 }
 
-#notification_wrapper > .notification > #notif_timer {
+#notificationWrapper > .notification > #notifTimer {
     width: 0%;
     height: 0.5rem;
     display: block;
     background-color: #FFCF0080;
-    animation: notification_timer 5s linear;
+    animation: notificationTimer 5s linear;
 }
 
-@keyframes notification_animation {
+@keyframes notificationAnimation {
     0%, 100%{
         left: -50dvw;
     }
@@ -448,7 +466,7 @@ article > p:first-child {
     }
 }
 
-@keyframes notification_timer {
+@keyframes notificationTimer {
     from {
         width: 100%;
     }

@@ -15,46 +15,52 @@
         <title>Karaoke</title>
     </head>
     <body>
-        <section class="loading_screen">
+        <section class="loadingScreen">
             <span>
             </span>
             <span>
                 <span>
-                    <p>Found&nbsp;<p class="song_count"></p>&nbsp;Songs</p>
+                    <p>Found&nbsp;<p class="songCount"></p>&nbsp;Songs</p>
                 </span>
                 <span>
-                    <span class="loading_bar"></span>
+                    <span class="loadingBar"></span>
                 </span>
             </span>
         </section>
         <section class="main">
-            <span id="nav_activation_area" onmouseenter="nav_state(1)"></span>
+            <span id="navActivationArea" onmouseenter="nav_state(1)"></span>
             <nav>
                 <span>
-                    <span class="is_searching">Searching<br>Yolo</span>
-                    <p class="entries_found">Found - Entries</p>
+                    <span class="isSearching">Searching<br>Yolo</span>
+                    <p class="entriesFound">Found - Entries</p>
                 </span>
-                <div id="song_list">Loading...</div>
+                <div id="songList">Loading...</div>
             </nav>
             <main>
-                <span id="main_activation_area" onmouseenter="nav_state(0)"></span>
-                <span id="video_player_wrapper">
-                    <div id="video_player"></div>
+                <span id="mainActivationArea" onmouseenter="nav_state(0)"></span>
+                <span id="videoPlayerWrapper">
+                    <div id="videoPlayer"></div>
                 </span>
-                <p id="main_message"></p>
+                <p id="mainMessage"></p>
             </main>
-            <span id="info_activation_area" onmouseenter="show_nav_info()"></span>
-            <div id="notification_wrapper">
+            <span id="infoActivationArea" onmouseenter="showNavInfo()"></span>
+            <div id="notificationWrapper">
                 <span class="notification">
-                    <p id="notif_header">Song added</p>
-                    <p id="notif_title">Minecraft Bedrock/Java Edition</p>
-                    <p id="notif_artist">Mojang</p>
-                    <span id="notif_timer"></span>
+                    <p id="notifHeader">Song added</p>
+                    <p id="notifTitle">Minecraft Bedrock/Java Edition</p>
+                    <p id="notifArtist">Mojang</p>
+                    <span id="notifTimer"></span>
                 </span>
             </div>
             <article>
-                <p>Up next</p>
-                <div class="current_queue"></div>
+                <span>
+                    <p>Up next</p>
+                    <div class="currentQueue"></div>
+                </span>
+                <span id="debugInfo" onclick="$('#debugInfo').css('opacity', '1'); setTimeout(()=>{$('#debugInfo').css('opacity', '0')}, 10000)">
+                    <span>Screen Resolution:&nbsp;<p id="screenRes">1920x1080</p></span>
+                    <span>Connection ID:&nbsp;<p id="connectionID">0000</p></span>
+                </span>
             </article>
             <div class="area" >
                 <ul class="circles">
@@ -75,66 +81,64 @@
     <script type="text/javascript" src="./scripts/socketio.js"></script>
     <script type="text/javascript">
         const nav = document.getElementsByTagName("nav")[0];
-        const nav_info = document.getElementsByTagName("article")[0];
-        const main_video = document.getElementsByTagName("main")[0];
-        const main_message = document.getElementById("main_message");
-        const notification_wrapper = document.getElementById("notification_wrapper");
-        const randomId = Math.floor(Math.random() * 4000);
+        const navInfo = document.getElementsByTagName("article")[0];
+        const mainVideo = document.getElementsByTagName("main")[0];
+        const mainMessage = document.getElementById("mainMessage");
+        const notificationWrapper = document.getElementById("notificationWrapper");
+        const randomId = Math.floor(Math.random() * 4000), debugInfo = document.getElementById("debugInfo");
         
         const in_queue = [];
-        let video_player, isPlaying = false;
+        let videoPlayer, isPlaying = false;
         
         function nav_state(state){
             if(state == 1){
                 nav.style.left = "0%";
-                nav_info.style.bottom = "0%";
-                nav_info.style.width = "86.7%";
-                main_video.style.width = "86.7%";
-                notification_wrapper.style.left = "calc(13.3% + 1rem)";
+                navInfo.style.bottom = "0%";
+                navInfo.style.width = "86.7%";
+                mainVideo.style.width = "86.7%";
+                notificationWrapper.style.left = "calc(13.3% + 1rem)";
             }else{
                 nav.style.left = "-13.3%";
-                nav_info.style.bottom = "-20%";
-                main_video.style.width = "100%";
-                notification_wrapper.style.left = "calc(0% + 1rem)";
+                navInfo.style.bottom = "-20%";
+                mainVideo.style.width = "100%";
+                notificationWrapper.style.left = "calc(0% + 1rem)";
             }
         };
 
-        function show_nav_info(){
-            nav_info.style.bottom = "0%";
-            nav_info.style.width = "100%";
+        function showNavInfo(){
+            navInfo.style.bottom = "0%";
+            navInfo.style.width = "100%";
         }
 
         window.onload = () => {
             $.ajax({
                 type: 'post',
-                url: './components/song_list.php',
+                url: './components/songList.php',
                 data: { filter: "none" },
                 success: (data) => {
-                    $("#song_list").html(data);
-                    $(".entries_found").html(`<span class="${$("#song_list").children().length > 0 ? "ok" : "error"}">Found ${$("#song_list").children().length} Entries</span>`);
+                    $("#songList").html(data);
+                    $(".entriesFound").html(`<span class="${$("#songList").children().length > 0 ? "ok" : "error"}">Found ${$("#songList").children().length} Entries</span>`);
                 },
                 error: () => {
-                    $("#song_list").html("Error getting songs.");
+                    $("#songList").html("Error getting songs.");
                 }
             });
 
-            notification_wrapper.innerHTML = "";
+            notificationWrapper.innerHTML = "";
             socket.emit('createConnection', randomId);
+            $("#screenRes").html(`${window.innerWidth}x${window.innerHeight}`);
+            $("#connectionID").html(randomId);
 
             socket.on('receivedMessage', (message) => {
                 console.log(message);
-            })
-
-            setTimeout(() => {
-                socket.emit('connectToConnection', randomId);
-            }, 3000);
+            });
 
             console.log(randomId)
         }
         
         function set_player(video_id){
-            if(!video_player){
-                video_player = new YT.Player('video_player', {
+            if(!videoPlayer){
+                videoPlayer = new YT.Player('videoPlayer', {
                     height: "100%",
                     width: "100%",
                     videoId: video_id,
@@ -146,27 +150,27 @@
                     events: {
                         'onReady': (event) => {
                             event.target.playVideo();
-                            $("#video_player_wrapper").css("visibility", "visible");
+                            $("#videoPlayerWrapper").css("visibility", "visible");
                         },
                         'onStateChange': (event) => {
                             yt_player_logging(event.data);
 
                             if(event.data == YT.PlayerState.ENDED && in_queue.length == 0){
-                                main_message.style.display = "block";
-                                $("#video_player_wrapper").css("visibility", "hidden");
+                                mainMessage.style.display = "block";
+                                $("#videoPlayerWrapper").css("visibility", "hidden");
                                 isPlaying = false;
                             }else if(event.data == YT.PlayerState.ENDED){
-                                $("#video_player_wrapper").css("visibility", "hidden");
+                                $("#videoPlayerWrapper").css("visibility", "hidden");
                                 set_queue(true);
                             }else if(event.data == YT.PlayerState.PLAYING){
-                                $("#video_player_wrapper").css("visibility", "visible");
-                                document.querySelector(".current_queue").classList.remove("active");
+                                $("#videoPlayerWrapper").css("visibility", "visible");
+                                document.querySelector(".currentQueue").classList.remove("active");
                             }
                         }
                     }
                 });
             }else{
-                video_player.loadVideoById(video_id);
+                videoPlayer.loadVideoById(video_id);
             }
         }
 
@@ -177,24 +181,24 @@
                 videoId: s_video_id
             });
 
-            notification_wrapper.innerHTML = `<span class="notification"><p id="notif_header">Song added</p><p id="notif_title">${s_title}</p><p id="notif_artist">${s_artist}</p><span id="notif_timer"></span></span>`;
+            notificationWrapper.innerHTML = `<span class="notification"><p id="notifHeader">Song added</p><p id="notifTitle">${s_title}</p><p id="notifArtist">${s_artist}</p><span id="notifTimer"></span></span>`;
             set_queue(false);
         }
 
         function set_queue(next){
             if((in_queue.length > 0 && !isPlaying) || next){
-                main_message.style.display = "none";
+                mainMessage.style.display = "none";
                 const song_info = in_queue.shift();
                 set_player(song_info.videoId);
                 isPlaying = true;
 
-                document.querySelector(".current_queue").classList.add("active");
+                document.querySelector(".currentQueue").classList.add("active");
             }
             
             if(in_queue.length == 0){
-                document.querySelector("article > p:first-child").style.left = "-50dvw";
+                document.querySelector("article > span > p:first-child").style.left = "-50dvw";
             }else{
-                document.querySelector("article > p:first-child").style.left = "0dvw";
+                document.querySelector("article > span > p:first-child").style.left = "0dvw";
             }
 
             let queue_elements = "";
@@ -202,20 +206,20 @@
                 queue_elements += `<span><p>${song.title}</p><p>${song.artist}</p></span>`;
             });
 
-            $(".current_queue").html(queue_elements);
+            $(".currentQueue").html(queue_elements);
         }
 
         const main_msg_template = "START THE PARTY!!!";
         const main_msg_write_delay = [100, 100, 150, 100, 100, 100, 50, 100, 100, 100, 150, 50, 100, 100, 150, 50, 100, 200];
-        function set_main_message(i){
+        function set_mainMessage(i){
             if(i == 18) return;
             setTimeout(() => {
-                main_message.innerHTML = main_msg_template.slice(0, i);
-                set_main_message(++i);
+                mainMessage.innerHTML = main_msg_template.slice(0, i);
+                set_mainMessage(++i);
             }, main_msg_write_delay[i]);
         }
 
-        setTimeout(() => set_main_message(0), 7000);
+        setTimeout(() => set_mainMessage(0), 7000);
 
         function yt_player_logging(event){
             switch(event){
