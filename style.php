@@ -331,11 +331,63 @@ main > #video_player_wrapper {
 
 article {
     position: absolute;
-    right: 0; bottom: 0%;
+    right: 0; bottom: 0;
     width: 86.7%;
     height: 20%;
     transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     z-index: 5;
+}
+
+article > p:first-child {
+    position: relative;
+    left: 0dvw;
+    margin-left: 1rem;
+    color: #FFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 1s cubic-bezier(0.19, 1, 0.21, 1);
+}
+
+.current_queue {
+    position: relative;
+}
+
+.current_queue > span {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem 1rem;
+    border: 1px solid #00CFFF;
+    border-radius: 1rem;
+    width: fit-content;
+    padding: 0.5rem 1rem;
+    background-color: #00000050;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.21, 1);
+}
+
+.current_queue > span > p {
+    color: #FFF;
+}
+
+.current_queue > span > p:nth-child(2){
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
+
+.current_queue.active > span:first-child{
+    animation: next_queue 1s cubic-bezier(0.19, 1, 0.21, 1);
+}
+
+@keyframes next_queue {
+    from{
+        background-color: #FFFFFF75;
+        color: #000;
+        border-color: #0F0;
+    }
+    to{
+        background-color: #00000050;
+        color: #FFF;
+        border-color: #00CFFF;
+    }
 }
 
 .area{ 

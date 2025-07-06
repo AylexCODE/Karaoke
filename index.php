@@ -46,7 +46,8 @@
             </main>
             <span id="info_activation_area" onmouseenter="show_nav_info()"></span>
             <article>
-                <p id="current_queue">Queue</p>
+                <p>Up next</p>
+                <div class="current_queue"></div>
             </article>
             <div class="area" >
                 <ul class="circles">
@@ -106,45 +107,6 @@
             });
         }
         
-      /*  function play(event, player){
-            console.log(event.data, player, in_queue);
-            if(event.data == YT.PlayerState.PLAYING){
-                if(player == 1){
-                    player1_wrapper.style.visibility = "visible";
-                    player2_wrapper.style.visibility = "hidden";
-                }else{
-                    player1_wrapper.style.visibility = "hidden";
-                    player2_wrapper.style.visibility = "visible";
-                }
-            }
-            
-            if(event.data == YT.PlayerState.ENDED){
-                if(active_player == 1){
-                    if(video_player2) video_player2.playVideo();
-                    video_player1.stopVideo();
-                    active_player = 2;
-                }else{
-                    video_player1.playVideo();
-                    video_player2.stopVideo();
-                    active_player = 1;
-                }
-
-                players_status[`player${player}`] = "available";
-
-                if(players_status.player1 == "available" && players_status.player2 == "available"){
-                    isPlaying = false;
-                    main_message.style.display = "block";
-                }else{
-                    set_queue();
-                }
-            }
-
-            if(firstSong){
-                video_player1.playVideo();
-                firstSong = false;
-            }
-        }
-*/
         function set_player(video_id){
             if(!video_player){
                 video_player = new YT.Player('video_player', {
@@ -172,12 +134,12 @@
                                 set_queue(true);
                             }else if(event.data == YT.PlayerState.PLAYING){
                                 $("#video_player_wrapper").css("visibility", "visible");
+                                document.querySelector(".current_queue").classList.remove("active");
                             }
                         }
                     }
                 });
             }else{
-                //$("#video_player_wrapper").css("visibility", "visible");
                 video_player.loadVideoById(video_id);
             }
         }
@@ -198,26 +160,24 @@
                 const song_info = in_queue.shift();
                 set_player(song_info.videoId);
                 isPlaying = true;
+
+                document.querySelector(".current_queue").classList.add("active");
+            }
+            
+            if(in_queue.length == 0){
+                document.querySelector("article > p:first-child").style.left = "-50dvw";
+            }else{
+                document.querySelector("article > p:first-child").style.left = "0dvw";
             }
 
-                let queue_elements = "";
-                in_queue.forEach((song) => {
-                    queue_elements += `<span><p>${song.title}</p><p>${song.artist}</}</span>`;
-                });
-                $("#current_queue").html(queue_elements);
-                    /*clearTimeout(play_timer);
+            let queue_elements = "";
+            in_queue.forEach((song) => {
+                queue_elements += `<span><p>${song.title}</p><p>${song.artist}</p></span>`;
+            });
 
-                    play_timer = setTimeout(() => {
-
-                    }, (song_info.duration * 1000) - 30000);*/
+            $(".current_queue").html(queue_elements);
         }
-        /*
-            youtube.setAttribute("frameborder", "0");
-            youtube.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
-            youtube.setAttribute("allowfullscreen", "");
 
-//document.getElementsByTagName("main")[0].appendChild(iframe);
-}*/
         const main_msg_template = "START THE PARTY!!!";
         const main_msg_write_delay = [100, 100, 150, 100, 100, 100, 50, 100, 100, 100, 150, 50, 100, 100, 150, 50, 100, 200];
         function set_main_message(i){
