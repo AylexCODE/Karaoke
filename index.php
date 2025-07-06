@@ -29,7 +29,7 @@
             </span>
         </section>
         <section class="main">
-            <span id="nav_activation_area" onmouseenter="controls_state(1)"></span>
+            <span id="nav_activation_area" onmouseenter="nav_state(1)"></span>
             <nav>
                 <span>
                     <span class="is_searching">Searching<br>Yolo</span>
@@ -38,15 +38,13 @@
                 <div id="song_list">Loading...</div>
             </nav>
             <main>
-                <span id="main_activation_area" onmouseenter="controls_state(0)"></span>
-                <span class="filler"></span>
+                <span id="main_activation_area" onmouseenter="nav_state(0)"></span>
                 <span id="video_player_wrapper">
                     <div id="video_player"></div>
                 </span>
-                <span class="filler"></span>
                 <p id="main_message"></p>
             </main>
-            <span id="options_activation_area" onmouseenter="controls_state(1)"></span>
+            <span id="info_activation_area" onmouseenter="show_nav_info()"></span>
             <article>
                 <p id="current_queue">Queue</p>
             </article>
@@ -68,29 +66,30 @@
     </body>
     <script type="text/javascript">
         const nav = document.getElementsByTagName("nav")[0];
-        const nav_options = document.getElementsByTagName("article")[0];
+        const nav_info = document.getElementsByTagName("article")[0];
         const main_video = document.getElementsByTagName("main")[0];
-        const main_video_filler = document.getElementsByClassName("filler");
         const main_message = document.getElementById("main_message");
         
         const in_queue = [];
         let video_player, isPlaying = false;
         
-        function controls_state(state){
+        function nav_state(state){
             if(state == 1){
                 nav.style.left = "0%";
-                nav_options.style.bottom = "0%";
+                nav_info.style.bottom = "0%";
+                nav_info.style.width = "86.7%";
                 main_video.style.width = "86.7%";
-                main_video_filler[0].classList.remove("active");
-                main_video_filler[1].classList.remove("active");
             }else{
                 nav.style.left = "-13.3%";
-                nav_options.style.bottom = "-20%";
+                nav_info.style.bottom = "-20%";
                 main_video.style.width = "100%";
-                main_video_filler[0].classList.add("active");
-                main_video_filler[1].classList.add("active");
             }
         };
+
+        function show_nav_info(){
+            nav_info.style.bottom = "0%";
+            nav_info.style.width = "100%";
+        }
 
         window.onload = () => {
             $.ajax({
@@ -183,11 +182,10 @@
             }
         }
 
-        function add_queue(s_title, s_artist, s_duration, s_video_id){
+        function add_queue(s_title, s_artist, s_video_id){
             in_queue.push({
                 title: s_title,
                 artist: s_artist,
-                duration: s_duration,
                 videoId: s_video_id
             });
 

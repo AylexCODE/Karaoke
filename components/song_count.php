@@ -1,7 +1,9 @@
 <?php
-    $q = mysqli_query($conn, "SELECT COUNT(id) AS Songs FROM songs");
+    $q = $conn->prepare("SELECT COUNT(title) AS Songs FROM songs");
 
-    $result = mysqli_fetch_assoc($q);
+    $q->execute();
+
+    $result = $q->fetch(PDO::FETCH_ASSOC);
 
     echo $result["Songs"];
 ?>

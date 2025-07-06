@@ -29,7 +29,7 @@ body{
     overflow: hidden;
 }
 
-body, main > span:nth-child(2), main > span:nth-child(4){
+body {
     background: linear-gradient(315deg, rgba(101,0,94,1) 3%, rgba(60,132,206,1) 38%, rgba(48,238,226,1) 68%, rgba(255,25,25,1) 98%);
     animation: gradient 60s ease infinite;
     background-size: 400% 400%;
@@ -321,7 +321,7 @@ main > #video_player_wrapper {
     -webkit-text-fill-color: transparent;
 }
 
-#options_activation_area {
+#info_activation_area {
     position: absolute;
     right: 0; bottom: 0;
     width: 86.7%;
