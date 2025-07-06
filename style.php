@@ -174,7 +174,7 @@ body {
 
 nav {
     position: absolute;
-    left: 0%; top: 0;
+    left: -13.3%; top: 0;
     height: 100%;
     width: 13.3%;
     display: flex;
@@ -258,7 +258,7 @@ nav > span > span {
 main {
     position: absolute;
     right: 0; top: 0;
-    width: 86.7%;
+    width: 100%;
     height: 100%;
     display: grid;
     place-items: center;
@@ -331,8 +331,8 @@ main > #video_player_wrapper {
 
 article {
     position: absolute;
-    right: 0; bottom: 0;
-    width: 86.7%;
+    right: 0; bottom: -20%;
+    width: 100%;
     height: 20%;
     transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     z-index: 5;
@@ -387,6 +387,73 @@ article > p:first-child {
         background-color: #00000050;
         color: #FFF;
         border-color: #00CFFF;
+    }
+}
+
+#notification_wrapper {
+    position: absolute;
+    bottom: 21%;
+    left: calc(0% + 1rem);
+    z-index: 99;
+    width: fit-content;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.21, 1);
+}
+
+#notification_wrapper > .notification {
+    position: relative;
+    left: -50dvw;
+    display: block;
+    border: 2px solid #FFEE41;
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: #00000050;
+    animation: notification_animation 5.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+#notification_wrapper > .notification > #notif_header {
+    border-bottom: 1px solid #FFCF00;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #FFF;
+}
+
+#notification_wrapper > .notification > #notif_title {
+    padding-top: 0.5rem;
+    padding-inline: 1rem;
+    color: #FFF;
+}
+
+#notification_wrapper > .notification > #notif_artist {
+    color: #FFF;
+    font-size: 0.7rem;
+    padding-bottom: 0.5rem;
+    padding-inline: 1rem;
+}
+
+#notification_wrapper > .notification > #notif_timer {
+    width: 0%;
+    height: 0.5rem;
+    display: block;
+    background-color: #FFCF0080;
+    animation: notification_timer 5s linear;
+}
+
+@keyframes notification_animation {
+    0%, 100%{
+        left: -50dvw;
+    }
+    10%, 90% {
+        left: 0dvw;
+    }
+}
+
+@keyframes notification_timer {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
     }
 }
 

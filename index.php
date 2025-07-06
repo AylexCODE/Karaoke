@@ -45,6 +45,14 @@
                 <p id="main_message"></p>
             </main>
             <span id="info_activation_area" onmouseenter="show_nav_info()"></span>
+            <div id="notification_wrapper">
+                <span class="notification">
+                    <p id="notif_header">Song added</p>
+                    <p id="notif_title">Minecraft Bedrock/Java Edition</p>
+                    <p id="notif_artist">Mojang</p>
+                    <span id="notif_timer"></span>
+                </span>
+            </div>
             <article>
                 <p>Up next</p>
                 <div class="current_queue"></div>
@@ -70,6 +78,7 @@
         const nav_info = document.getElementsByTagName("article")[0];
         const main_video = document.getElementsByTagName("main")[0];
         const main_message = document.getElementById("main_message");
+        const notification_wrapper = document.getElementById("notification_wrapper");
         
         const in_queue = [];
         let video_player, isPlaying = false;
@@ -80,10 +89,12 @@
                 nav_info.style.bottom = "0%";
                 nav_info.style.width = "86.7%";
                 main_video.style.width = "86.7%";
+                notification_wrapper.style.left = "calc(13.3% + 1rem)";
             }else{
                 nav.style.left = "-13.3%";
                 nav_info.style.bottom = "-20%";
                 main_video.style.width = "100%";
+                notification_wrapper.style.left = "calc(0% + 1rem)";
             }
         };
 
@@ -105,6 +116,8 @@
                     $("#song_list").html("Error getting songs.");
                 }
             });
+
+            notification_wrapper.innerHTML = "";
         }
         
         function set_player(video_id){
@@ -151,6 +164,7 @@
                 videoId: s_video_id
             });
 
+            notification_wrapper.innerHTML = `<span class="notification"><p id="notif_header">Song added</p><p id="notif_title">${s_title}</p><p id="notif_artist">${s_artist}</p><span id="notif_timer"></span></span>`;
             set_queue(false);
         }
 
