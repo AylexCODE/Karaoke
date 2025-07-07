@@ -58,8 +58,8 @@
                     <div class="currentQueue"></div>
                 </span>
                 <span id="debugInfo" onclick="$('#debugInfo').css('opacity', '1'); setTimeout(()=>{$('#debugInfo').css('opacity', '0')}, 10000)">
+                    <span>Connection ID:&nbsp;<p id="connectionID">0000</p>&nbsp;(<p id="connectionStatus">disconnected</p>)</span>
                     <span>Screen Resolution:&nbsp;<p id="screenRes">1920x1080</p></span>
-                    <span>Connection ID:&nbsp;<p id="connectionID">0000</p></span>
                 </span>
             </article>
             <div class="area" >
@@ -129,8 +129,13 @@
             $("#screenRes").html(`${window.innerWidth}x${window.innerHeight}`);
             $("#connectionID").html(randomId);
 
-            socket.on('receivedMessage', (message) => {
-                console.log(message);
+            socket.on('receivedMessage', (data) => {
+                if(data.message == "AddQueue"){
+                    const { title, artist, videoId } = data.songInfo;
+                    console.log(title, artist, videoId)
+                    addQueue(title, artist, videoId);
+                }
+                console.log(data);
             });
 
             console.log(randomId)
@@ -161,7 +166,7 @@
                                 isPlaying = false;
                             }else if(event.data == YT.PlayerState.ENDED){
                                 $("#videoPlayerWrapper").css("visibility", "hidden");
-                                set_queue(true);
+                                setQueue(true);
                             }else if(event.data == YT.PlayerState.PLAYING){
                                 $("#videoPlayerWrapper").css("visibility", "visible");
                                 document.querySelector(".currentQueue").classList.remove("active");
@@ -174,7 +179,7 @@
             }
         }
 
-        function add_queue(s_title, s_artist, s_video_id){
+        function addQueue(s_title, s_artist, s_video_id){
             in_queue.push({
                 title: s_title,
                 artist: s_artist,
@@ -182,10 +187,10 @@
             });
 
             notificationWrapper.innerHTML = `<span class="notification"><p id="notifHeader">Song added</p><p id="notifTitle">${s_title}</p><p id="notifArtist">${s_artist}</p><span id="notifTimer"></span></span>`;
-            set_queue(false);
+            setQueue(false);
         }
 
-        function set_queue(next){
+        function setQueue(next){
             if((in_queue.length > 0 && !isPlaying) || next){
                 mainMessage.style.display = "none";
                 const song_info = in_queue.shift();

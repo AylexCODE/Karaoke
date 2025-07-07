@@ -8,7 +8,7 @@
 
         if(count($result) != 0){
             foreach($result as $song){
-            echo "<span onclick='add_queue(&#x27;" . $song["Title"] . "&#x27;, &#x27;" . $song["Artist"] . "&#x27;, &#x27;" . $song["VideoID"] . "&#x27;)'>";
+            echo "<span onclick='addQueue(&#x27;" . $song["Title"] . "&#x27;, &#x27;" . $song["Artist"] . "&#x27;, &#x27;" . $song["VideoID"] . "&#x27;)'>";
             echo "<p>" . $song["Title"] ."</p>";
             echo "<p>" . $song["Artist"] . "</p>";
             echo "</span>";
