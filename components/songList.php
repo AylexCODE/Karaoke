@@ -2,13 +2,21 @@
     require_once("../database/db_conn.php");
 
     if(isset($_POST)){
-        $q = $conn->prepare("SELECT songs.title AS Title, artists.name AS Artist, songs.video_id as VideoID FROM songs INNER JOIN artists ON songs.artist_id = artists.id");
+        $filter = "";
+
+        if($_POST["filter"] == "withVocals"){
+            $filter = "WHERE songs.isVocal = 1 ";
+        }elseif($_POST["filter"] == "noVocals"){
+            $filter = "WHERE songs.isVocal = 0 ";
+        }
+
+        $q = $conn->prepare("SELECT songs.title AS Title, artists.name AS Artist, songs.isVocal as is_vocal, songs.video_id as VideoID FROM songs INNER JOIN artists ON songs.artist_id = artists.id " . $filter . "ORDER BY songs.title");
         $q->execute();
         $result = $q->fetchAll(PDO::FETCH_ASSOC);
 
         if(count($result) != 0){
             foreach($result as $song){
-            echo "<span onclick='addQueue(&#x27;" . $song["Title"] . "&#x27;, &#x27;" . $song["Artist"] . "&#x27;, &#x27;" . $song["VideoID"] . "&#x27;)'>";
+            echo "<span class='isvocal" . $song["is_vocal"] . "' onclick='addQueue(&#96;" . htmlspecialchars($song["Title"]) . "&#96;, &#96;" . htmlspecialchars($song["Artist"]) . "&#96;, &#x27;" . $song["VideoID"] . "&#x27;, &#x27;" . $song["is_vocal"] . "&#x27;)'>";
             echo "<p>" . $song["Title"] ."</p>";
             echo "<p>" . $song["Artist"] . "</p>";
             echo "</span>";
