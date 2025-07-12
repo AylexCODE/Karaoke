@@ -23,8 +23,8 @@
             <input list="genres_list" name="genre">
             <p>Contains Vocal?</p>
             <select id="is_vocal">
-                <option value="0">False</p>
-                <option value="1">True</p>
+                <option value=0>False</p>
+                <option value=1>True</p>
             </select>
             <div id="submit" onclick="submitFormData()">Submit</div>
             <p>Preview</p>
@@ -64,7 +64,7 @@
             const gTitle = data.get("title");
             const gArtist = data.get("artist");
             const gGenre = data.get("genre");
-            const gIsVocal = data.get("is_vocal");
+            const gIsVocal = $("#is_vocal").val();
 
             $.ajax({
                 type: 'POST',
@@ -78,6 +78,7 @@
                 },
                 success: (response) => {
                     console.log(response);
+                    form.reset();
                 },
                 error: (error) => {
                     console.log(error);
@@ -86,13 +87,15 @@
         }
 
         function verifyVideoURL(url){
+            if(url == "") return;
+
             let video_id;
 
             if(url.includes("youtu.be")){
                 video_id = url.split("youtu.be/")[1];
                 checkVideo(video_id.split("?")[0]);
             }else if(url.includes("youtube.com")){
-                checkVideo(url.split("?v=")[1]);
+                checkVideo(url.split("?v=")[1].split("&")[0]);
             }
         }
 
@@ -122,6 +125,9 @@
                                 console.log(previewer.videoTitle)
                             }
                             
+                        },
+                        'onError': (event) => {
+                            console.log(event);
                         }
                     }
                 });
