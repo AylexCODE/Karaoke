@@ -22,16 +22,13 @@
     display: none;
 }
 
-body{
+body {
     height: 100dvh;
     width: 100dvw;
     /*background-color: #FEFFFE;*/
     overflow: hidden;
-}
-
-body {
     background: linear-gradient(315deg, rgba(101,0,94,1) 3%, rgba(60,132,206,1) 38%, rgba(48,238,226,1) 68%, rgba(255,25,25,1) 98%);
-    animation: gradient 60s ease infinite;
+    animation: gradient 120s ease infinite;
     background-size: 400% 400%;
     background-attachment: fixed;
 }
@@ -237,6 +234,11 @@ nav > span > span {
     padding: 1% 5% 1%;
 }
 
+#songList > span:hover {
+    border-top: 1px solid #0FFF0F;
+    border-bottom: 1px solid #0FFF0F;
+}
+
 #songList > span > p {
     overflow: hidden;
     white-space: nowrap;
@@ -253,6 +255,30 @@ nav > span > span {
 
 #songList > span:nth-child(even){
     background-color: #FFFFFF10;
+}
+
+.isvocal1 > p {
+    color: #6C01D6;
+}
+
+.isvocal0 > p {
+    color: #FFF;
+}
+
+#filters {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#filters > span {
+    padding: 0.5rem 1rem;
+    border: 1px solid black;
+}
+
+#filters > active {
+    border: 1px solid green;
 }
 
 main {
@@ -341,9 +367,13 @@ article {
     z-index: 5;
 }
 
-article > span > p:first-child {
+article > span:first-child > span:first-child {
     position: relative;
     left: -50dvw;
+    width: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     margin-left: 1rem;
     color: #FFF;
     font-weight: bold;
@@ -351,17 +381,21 @@ article > span > p:first-child {
     transition: all 1s cubic-bezier(0.19, 1, 0.21, 1);
 }
 
+article > span:first-child > span:first-child > p {
+    text-wrap: nowrap;
+}
+
 article > span:nth-child(2) {
     display: flex;
     height: 100%;
     flex-direction: column;
-    justify-content: flex-end;
     padding: 0.2rem;
     color: #FFF;
     opacity: 0;
+    justify-content: flex-end;
 }
 
-article > span > span {
+article > span:first-child > span, #debugInfo > span {
     display: flex;
     flex-direction: row;
 }
@@ -374,7 +408,6 @@ article > span > span {
     display: flex;
     flex-direction: column;
     margin: 0.5rem 1rem;
-    border: 1px solid #00CFFF;
     border-radius: 1rem;
     width: fit-content;
     padding: 0.5rem 1rem;
@@ -382,8 +415,17 @@ article > span > span {
     transition: all 0.5s cubic-bezier(0.19, 1, 0.21, 1);
 }
 
+.isvocalq0 {
+    border: 1px solid #00CFFF;
+}
+
+.isvocalq1 {
+    border: 1px solid #FFEE41;
+}
+
 .currentQueue > span > p {
     color: #FFF;
+    font-weight: bold;
 }
 
 .currentQueue > span > p:nth-child(2){
@@ -419,7 +461,7 @@ article > span > span {
 
 #notificationWrapper > .notification {
     position: relative;
-    left: -50dvw;
+    left: -100dvw;
     display: block;
     border: 2px solid #FFEE41;
     border-radius: 1rem;
@@ -459,7 +501,7 @@ article > span > span {
 
 @keyframes notificationAnimation {
     0%, 100%{
-        left: -50dvw;
+        left: -100dvw;
     }
     10%, 90% {
         left: 0dvw;
@@ -473,6 +515,14 @@ article > span > span {
     to {
         width: 0%;
     }
+}
+
+#skipBtn {
+    margin-left: 3rem;
+}
+
+#skipBtn:hover {
+    color: #FF2222;
 }
 
 .area{ 
@@ -496,7 +546,7 @@ article > span > span {
     width: 20px;
     height: 20px;
     background: rgba(255, 255, 255, 0.2);
-    animation: animate 90s linear infinite;
+    animation: animate 200s linear infinite;
     bottom: -150px;
     
 }
@@ -513,15 +563,15 @@ article > span > span {
     left: 10%;
     width: 20px;
     height: 20px;
-    animation-delay: 30s;
-    animation-duration: 50s;
+    animation-delay: 16s;
+    animation-duration: 96s;
 }
 
 .circles li:nth-child(3){
     left: 70%;
     width: 20px;
     height: 20px;
-    animation-delay: 60s;
+    animation-delay: 32s;
 }
 
 .circles li:nth-child(4){
@@ -529,7 +579,7 @@ article > span > span {
     width: 60px;
     height: 60px;
     animation-delay: 0s;
-    animation-duration: 120s;
+    animation-duration: 144s;
 }
 
 .circles li:nth-child(5){
@@ -543,30 +593,30 @@ article > span > span {
     left: 75%;
     width: 110px;
     height: 110px;
-    animation-delay: 70s;
+    animation-delay: 24s;
 }
 
 .circles li:nth-child(7){
     left: 35%;
     width: 150px;
     height: 150px;
-    animation-delay: 40s;
+    animation-delay: 56s;
 }
 
 .circles li:nth-child(8){
     left: 50%;
     width: 25px;
     height: 25px;
-    animation-delay: 60s;
-    animation-duration: 45s;
+    animation-delay: 120s;
+    animation-duration: 360s;
 }
 
 .circles li:nth-child(9){
     left: 20%;
     width: 15px;
     height: 15px;
-    animation-delay: 90s;
-    animation-duration: 90s;
+    animation-delay: 128s;
+    animation-duration: 280s;
 }
 
 .circles li:nth-child(10){
@@ -574,7 +624,7 @@ article > span > span {
     width: 150px;
     height: 150px;
     animation-delay: 0s;
-    animation-duration: 70s;
+    animation-duration: 88s;
 }
 
 @keyframes animate {

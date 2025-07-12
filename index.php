@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="./vendor/jquery-3.7.1.min.js"></script>
         <script src="./vendor/socketio-4.8.1.min.js"></script>
-        <link rel="icon" href="./assets/logo.png" type="image/x-icon">
+        <link rel="icon" href="./assets/images/logo.svg" type="image/x-icon">
         <title>Karaoke</title>
     </head>
     <body>
@@ -35,6 +35,11 @@
                     <p class="entriesFound">Found - Entries</p>
                 </span>
                 <div id="songList">Loading...</div>
+                <div id="filters">
+                <span class="filterAll" onclick="filterSongs('all')">All</span>
+                <span class="filterWithVocals" onclick="filterSongs('withVocals')">With Vocals</span>
+                <span class="filerWithNoVocals" onclick="filterSongs('noVocals')">No Vocals</span>
+                </div>
             </nav>
             <main>
                 <span id="mainActivationArea" onmouseenter="nav_state(0)"></span>
@@ -54,7 +59,10 @@
             </div>
             <article>
                 <span>
-                    <p>Up next</p>
+                    <span>
+                        <p>Up next</p>
+                        <p id="skipBtn" onclick="setQueue(true)">Skip</p>
+                    </span>
                     <div class="currentQueue"></div>
                 </span>
                 <span id="debugInfo" onclick="$('#debugInfo').css('opacity', '1'); setTimeout(()=>{$('#debugInfo').css('opacity', '0')}, 10000)">
@@ -85,7 +93,7 @@
         const mainVideo = document.getElementsByTagName("main")[0];
         const mainMessage = document.getElementById("mainMessage");
         const notificationWrapper = document.getElementById("notificationWrapper");
-        const randomId = Math.floor(Math.random() * 4000), debugInfo = document.getElementById("debugInfo");
+        const randomId = Math.floor(Math.random() * 9999), debugInfo = document.getElementById("debugInfo");
         
         const in_queue = [];
         let videoPlayer, isPlaying = false;
@@ -110,11 +118,11 @@
             navInfo.style.width = "100%";
         }
 
-        window.onload = () => {
+        function filterSongs(s_filter){
             $.ajax({
                 type: 'post',
                 url: './components/songList.php',
-                data: { filter: "none" },
+                data: { filter: s_filter },
                 success: (data) => {
                     $("#songList").html(data);
                     $(".entriesFound").html(`<span class="${$("#songList").children().length > 0 ? "ok" : "error"}">Found ${$("#songList").children().length} Entries</span>`);
@@ -123,10 +131,20 @@
                     $("#songList").html("Error getting songs.");
                 }
             });
+        }
 
+        window.onload = () => {
+            filterSongs("noVocals");
+
+keepAlive();
             notificationWrapper.innerHTML = "";
             socket.emit('createConnection', randomId);
+
             $("#screenRes").html(`${window.innerWidth}x${window.innerHeight}`);
+            window.onresize = () => {
+                $("#screenRes").html(`${window.innerWidth}x${window.innerHeight}`);
+            }
+            
             $("#connectionID").html(randomId);
 
             socket.on('receivedMessage', (data) => {
@@ -138,7 +156,8 @@
                 console.log(data);
             });
 
-            console.log(randomId)
+            console.log(randomId);
+            setInterval(keepAlive, 30000);
         }
         
         function set_player(video_id){
@@ -179,11 +198,12 @@
             }
         }
 
-        function addQueue(s_title, s_artist, s_video_id){
+        function addQueue(s_title, s_artist, s_video_id, s_isVocal){
             in_queue.push({
                 title: s_title,
                 artist: s_artist,
-                videoId: s_video_id
+                videoId: s_video_id,
+                isVocal: s_isVocal
             });
 
             notificationWrapper.innerHTML = `<span class="notification"><p id="notifHeader">Song added</p><p id="notifTitle">${s_title}</p><p id="notifArtist">${s_artist}</p><span id="notifTimer"></span></span>`;
@@ -201,14 +221,14 @@
             }
             
             if(in_queue.length == 0){
-                document.querySelector("article > span > p:first-child").style.left = "-50dvw";
+                document.querySelector("article > span > span:first-child").style.left = "-50dvw";
             }else{
-                document.querySelector("article > span > p:first-child").style.left = "0dvw";
+                document.querySelector("article > span > span:first-child").style.left = "0dvw";
             }
 
             let queue_elements = "";
             in_queue.forEach((song) => {
-                queue_elements += `<span><p>${song.title}</p><p>${song.artist}</p></span>`;
+                queue_elements += `<span class='isvocalq${song.isVocal}'><p>${song.title}</p><p>${song.artist}</p></span>`;
             });
 
             $(".currentQueue").html(queue_elements);
@@ -216,15 +236,15 @@
 
         const main_msg_template = "START THE PARTY!!!";
         const main_msg_write_delay = [100, 100, 150, 100, 100, 100, 50, 100, 100, 100, 150, 50, 100, 100, 150, 50, 100, 200];
-        function set_mainMessage(i){
-            if(i == 18) return;
-            setTimeout(() => {
-                mainMessage.innerHTML = main_msg_template.slice(0, i);
-                set_mainMessage(++i);
-            }, main_msg_write_delay[i]);
-        }
+        // function set_mainMessage(i){
+        //     if(i == 18) return;
+        //     setTimeout(() => {
+        //         mainMessage.innerHTML = main_msg_template.slice(0, i);
+        //         set_mainMessage(++i);
+        //     }, main_msg_write_delay[i]);
+        // }
 
-        setTimeout(() => set_mainMessage(0), 7000);
+        //setTimeout(() => set_mainMessage(0), 7000);
 
         function yt_player_logging(event){
             switch(event){
@@ -235,6 +255,19 @@
                 case 3: console.log("Buffering"); break;
                 case 5: console.log("Cued"); break;
             }
+        }
+
+        const keepAlive = () => {
+            $.ajax({
+                type: 'GET',
+                url: 'https://socketio-f317.onrender.com',
+                success: (response) => {
+                    console.log(response, "Ok");
+                },
+                error: (error) => {
+                    console.log(error, "Error");
+                }
+            });
         }
 
         var tag = document.createElement('script');
