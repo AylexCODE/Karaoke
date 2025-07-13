@@ -48,16 +48,20 @@
                 margin-bottom: 0.5rem;
             }
 
-            #submit {
-                width: calc(100% - 1.2rem);
+            button {
+                width: 100%;
                 padding: 0.3rem 0.6rem;
                 background-color: #07DA63;
                 text-transform: uppercase;
+                border: none;
                 border-radius: 0.7rem;
-                text-align: center;
                 font-size: 0.8rem;
                 font-weight: bold;
                 color: #FFF;
+            }
+
+            button:disabled {
+                background-color: #E8E9EB;
             }
 
             #notif {
@@ -107,17 +111,18 @@
             <label for="ytURL">Youtube Link/URL</label>
             <input type="text" oninput="verifyVideoURL(this.value)" id="ytURL">
             <label for="title">Title</label>
-            <input type="text" id="title" name="title">
+            <input type="text" id="title" name="title" oninput="checkForm()" disabled>
             <label for="artist">Artist</label>
-            <input list="artists_list" name="artist" id="artist">
+            <input list="artists_list" name="artist" id="artist" oninput="checkForm()" disabled>
             <label for="genre">Genre</label>
-            <input list="genres_list" name="genre" id="genre">
+            <input list="genres_list" name="genre" id="genre" oninput="checkForm()" disabled>
             <label for="is_vocal">Contains Vocal?</label>
-            <select id="is_vocal">
-                <option value=0>False</p>
-                <option value=1>True</p>
+            <select id="is_vocal" onchange="checkForm()" disabled>
+                <option value="none" selected disabled></option>
+                <option value=0>False</option>
+                <option value=1>True</option>
             </select>
-            <div id="submit" onclick="submitFormData()">Submit</div>
+            <button id="submit" onclick="submitFormData()" disabled>Submit</button>
         </form>
         <p>Preview</p>
         <div id="previewer"></div>
@@ -147,6 +152,11 @@
         const title = document.getElementById("title");
         const form = document.getElementsByTagName("form")[0];
         const notification = document.getElementById("notif");
+        const submitBtn = document.getElementsByTagName("button")[0];
+        const formTitle = document.getElementById("title");
+        const formArtist = document.getElementById("artist");
+        const formGenre = document.getElementById("genre");
+        const formIsVocal = document.getElementById("is_vocal");
 
         let previewer, videoID;
 
@@ -172,6 +182,7 @@
                     console.log(response);
                     const isOk = response == "Added Successfully!" ? "success" : "error";
                     notification.innerHTML = `<span class="${isOk}">${response}</span>`;
+                    submitBtn.disabled = true;
                     form.reset();
                 },
                 error: (error) => {
@@ -216,15 +227,33 @@
                                 yt_player_logging(event.data);
                             if(event.data == YT.PlayerState.PLAYING){
                                 title.value = previewer.videoTitle;
+                                formTitle.disabled = false;
+                                formArtist.disabled = false;
+                                formGenre.disabled = false;
+                                formIsVocal.disabled = false;
                                 console.log(previewer.videoTitle)
                             }
                             
                         },
                         'onError': (event) => {
                             console.log(event);
+                            submitBtn.disabled = true;
+                            formTitle.disabled = true; formTitle.value = "";
+                            formArtist.disabled = true; formArtist.value = "";
+                            formGenre.disabled = true; formGenre.value = "";
+                            formIsVocal.disabled = true; formIsVocal.selectedIndex = 0;
+                            videoID = "";
                         }
                     }
                 });
+            }
+        }
+
+        function checkForm(){
+            if(formTitle.value.trim() == "" || formArtist.value.trim() == "" || formGenre.value.trim() == "" || formIsVocal.value == "none"){
+                submitBtn.disabled = true;
+            }else{
+                submitBtn.disabled = false;
             }
         }
 
