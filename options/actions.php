@@ -66,7 +66,7 @@
                     $q = $conn->prepare("INSERT INTO songs VALUES (null, ?, ?, ?, ?, ?);");
                     $q->execute([$artist_id, $title, $genre_id, $isVocal, $video_id]);
 
-                    echo "Added successfully!";
+                    echo "Added Successfully!";
                 }catch(PDOException $g){
                     echo "Error Inserting New Song: " . $g;
                 }

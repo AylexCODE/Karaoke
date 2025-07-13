@@ -60,16 +60,49 @@
                 color: #FFF;
             }
 
+            #notif {
+                width: 100%;
+                display: grid;
+                place-items: center;
+                position: fixed;
+                left: 0; top: -20dvh;
+                height: 40px;
+                z-index: 10;
+            }
+
+            .success, .error {
+                position: relative;
+                padding: 0.5rem 1rem;
+                border: 1px solid #08F26E;
+                border-radius: 0.5rem;
+                background-color: #E8E9EB;
+                animation: slideDown 7s cubic-bezier(0.19, 1, 0.21, 1);
+            }
+
+            .error {
+                border-color: #DF2C14;
+            }
+
             #previewer {
                 height: 390px;
                 width: 350px;
                 border: 1px solid #CCC;
             }
 
+            @keyframes slideDown {
+                0%, 100% {
+                    top: 0dvh;
+                }
+                20%, 80% {
+                    top: calc(21dvh);
+                }
+            }
+
         </style>
         <title>Karaoke Dev</title>
     </head>
     <body>
+        <span id="notif"></span>
         <form>
             <label for="ytURL">Youtube Link/URL</label>
             <input type="text" oninput="verifyVideoURL(this.value)" id="ytURL">
@@ -113,6 +146,7 @@
     <script type="text/javascript">
         const title = document.getElementById("title");
         const form = document.getElementsByTagName("form")[0];
+        const notification = document.getElementById("notif");
 
         let previewer, videoID;
 
@@ -136,6 +170,8 @@
                 },
                 success: (response) => {
                     console.log(response);
+                    const isOk = response == "Added Successfully!" ? "success" : "error";
+                    notification.innerHTML = `<span class="${isOk}">${response}</span>`;
                     form.reset();
                 },
                 error: (error) => {
