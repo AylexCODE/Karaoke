@@ -81,6 +81,7 @@
                 border-radius: 0.5rem;
                 background-color: #E8E9EB;
                 animation: slideDown 7s cubic-bezier(0.19, 1, 0.21, 1);
+                opacity: 0;
             }
 
             .error {
@@ -96,9 +97,11 @@
             @keyframes slideDown {
                 0%, 100% {
                     top: 0dvh;
+                    opacity: 0;
                 }
                 20%, 80% {
-                    top: calc(21dvh);
+                    top: 21dvh;
+                    opacity: 1;
                 }
             }
 
@@ -107,7 +110,7 @@
     </head>
     <body>
         <span id="notif"></span>
-        <form>
+        <form onsubmit="return false">
             <label for="ytURL">Youtube Link/URL</label>
             <input type="text" oninput="verifyVideoURL(this.value)" id="ytURL">
             <label for="title">Title</label>
@@ -122,7 +125,7 @@
                 <option value=0>False</option>
                 <option value=1>True</option>
             </select>
-            <button id="submit" onclick="submitFormData()" disabled>Submit</button>
+            <button type="submit" id="submit" onclick="submitFormData()" disabled>Submit</button>
         </form>
         <p>Preview</p>
         <div id="previewer"></div>
@@ -181,9 +184,13 @@
                 success: (response) => {
                     console.log(response);
                     const isOk = response == "Added Successfully!" ? "success" : "error";
+
+                    if(response.includes("Error Inserting New Song") && response.includes("Duplicate entry")){
+                        response = "Error: Song Already Exist!";
+                    }
                     notification.innerHTML = `<span class="${isOk}">${response}</span>`;
                     submitBtn.disabled = true;
-                    form.reset();
+                    if(isOk == "success") form.reset();
                 },
                 error: (error) => {
                     console.log(error);
