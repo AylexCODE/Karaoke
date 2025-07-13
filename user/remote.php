@@ -6,11 +6,56 @@
         <script src="../vendor/jquery-3.7.1.min.js"></script>
         <script src="../vendor/socketio-4.8.1.min.js"></script>
         <link rel="icon" href="./assets/logo.png" type="image/x-icon">
+        <style type="text/css">
+            * {
+                padding: 0;
+                margin: 0;
+            }
+
+            body {
+                height: 100dvh;
+                width: 100dvw;
+            }
+
+            nav {
+                width: calc(100% - 2rem);
+                height: 40px;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding-inline: 1rem;
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 27px 0px;
+            }
+
+            nav p {
+                text-wrap: nowrap;
+            }
+
+            nav > span > button {
+                text-wrap: nowrap;
+                background-color: #07DA63;
+            }
+
+            nav > span:nth-child(2){
+                display: flex;
+                flex-direction: row;
+                gap: 0.5rem;
+            }
+        </style>
         <title>Karaoke Remote</title>
     </head>
     <body>
-        <input type="text" oninput="setId(this.value)"><p id="connectionIdStatus">Not set</p>
-        <p class="entriesFound">Found - Entries</p>
+        <div popover="auto" id="karaokeId">
+            <input type="text" oninput="setId(this.value)"><p id="connectionId">Not set</p>
+        </div>
+        <nav>
+            <p class="entriesFound">Found - Entries</p>
+            <span>
+                <p id="connectionIdStatus">Null</p>
+                <button popovertarget="karaokeId">Set ID</button>
+            </span>
+        </nav>
         <div id="songList"></div>
         <span onclick="sendCommand()">Add Song</span>
     </body>
@@ -36,7 +81,8 @@
             delay = setTimeout(() => {
                 hostId = id;
                 socket.emit('connectToConnection', id, (response) => {
-                    $("#connectionIdStatus").html(response.status);
+                    $("#connectionIdStatus").html(response.status == "Connected" ? response.status : "Invalid");
+                    $("#connectionId").html(response.status);
                     console.log(response.status);
                 });
             }, 1000);
