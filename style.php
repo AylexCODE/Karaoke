@@ -225,7 +225,7 @@ nav > span > span {
 
 #songList {
     width: 100%;
-    height: 80%;
+    height: 100%;
     overflow-y: scroll;
 }
 
