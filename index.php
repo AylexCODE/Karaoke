@@ -102,11 +102,11 @@
             if(state == 1){
                 nav.style.left = "0%";
                 navInfo.style.bottom = "0%";
-                navInfo.style.width = "86.7%";
-                mainVideo.style.width = "86.7%";
-                notificationWrapper.style.left = "calc(13.3% + 1rem)";
+                navInfo.style.width = "80%";
+                mainVideo.style.width = "80%";
+                notificationWrapper.style.left = "calc(20% + 1rem)";
             }else{
-                nav.style.left = "-13.3%";
+                nav.style.left = "-20%";
                 navInfo.style.bottom = "-20%";
                 mainVideo.style.width = "100%";
                 notificationWrapper.style.left = "calc(0% + 1rem)";

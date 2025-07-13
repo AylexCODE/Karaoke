@@ -164,16 +164,16 @@ body {
 #navActivationArea {
     position: absolute;
     left: 0%; top: 0;
-    width: 13.3%;
+    width: 20%;
     height: 100%;
     z-index: 4;
 }
 
 nav {
     position: absolute;
-    left: -13.3%; top: 0;
+    left: -20%; top: 0;
     height: 100%;
-    width: 13.3%;
+    width: 20%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -243,10 +243,11 @@ nav > span > span {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-size: 1.5rem;
 }
 
 #songList > span > p:nth-child(2){
-    font-size: .7rem;
+    font-size: 1rem;
 }
 
 #songList > span:nth-child(odd){
@@ -275,6 +276,8 @@ nav > span > span {
 #filters > span {
     padding: 0.5rem 1rem;
     border: 1px solid black;
+    border-radius: 10px;
+    margin: 0.5rem 0rem 0.5rem 0.5rem;
 }
 
 #filters > active {
@@ -370,7 +373,6 @@ article {
 article > span:first-child > span:first-child {
     position: relative;
     left: -50dvw;
-    width: 100px;
     display: flex;
     flex-direction: row;
     justify-content: center;
