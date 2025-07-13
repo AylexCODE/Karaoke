@@ -8,28 +8,86 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="../vendor/jquery-3.7.1.min.js"></script>
-        <link rel="icon" href="./assets/logo.png" type="image/x-icon">
+        <link rel="icon" href="../assets/logo.png" type="image/x-icon">
+        <style type="text/css">
+            @font-face {
+                font-family: space-grotesk-regular;
+                url: ("../assets/fonts/SpaceGrotesk-Regular.otf");
+                src: url("../assets/fonts/SpaceGrotesk-Regular.otf");
+            }
+
+            * {
+                padding: 0;
+                margin: 0;
+                font-family: space-grotesk-regular;
+            }
+
+            body {
+                width: 100dvw;
+                height: 100dvh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                border-radius: 1rem;
+                padding: 0.5rem 1rem;
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            }
+
+            form > label {
+                font-size: 0.8rem;
+                opacity: 0.7;
+            }
+
+            form > input, form > select {
+                margin-bottom: 0.5rem;
+            }
+
+            #submit {
+                width: calc(100% - 1.2rem);
+                padding: 0.3rem 0.6rem;
+                background-color: #07DA63;
+                text-transform: uppercase;
+                border-radius: 0.7rem;
+                text-align: center;
+                font-size: 0.8rem;
+                font-weight: bold;
+                color: #FFF;
+            }
+
+            #previewer {
+                height: 390px;
+                width: 350px;
+                border: 1px solid #CCC;
+            }
+
+        </style>
         <title>Karaoke Dev</title>
     </head>
     <body>
         <form>
-            <p>Youtube Link/URL</p>
-            <input type="text" oninput="verifyVideoURL(this.value)">
-            <p>Title</p>
+            <label for="ytURL">Youtube Link/URL</label>
+            <input type="text" oninput="verifyVideoURL(this.value)" id="ytURL">
+            <label for="title">Title</label>
             <input type="text" id="title" name="title">
-            <p>Artist</p>
-            <input list="artists_list" name="artist">
-            <p>Genre</p>
-            <input list="genres_list" name="genre">
-            <p>Contains Vocal?</p>
+            <label for="artist">Artist</label>
+            <input list="artists_list" name="artist" id="artist">
+            <label for="genre">Genre</label>
+            <input list="genres_list" name="genre" id="genre">
+            <label for="is_vocal">Contains Vocal?</label>
             <select id="is_vocal">
                 <option value=0>False</p>
                 <option value=1>True</p>
             </select>
             <div id="submit" onclick="submitFormData()">Submit</div>
-            <p>Preview</p>
-            <div id="previewer"></div>
         </form>
+        <p>Preview</p>
+        <div id="previewer"></div>
         <datalist id="artists_list">
             <?php
                 $getArtists = $conn->prepare("SELECT name FROM artists;");
@@ -107,11 +165,11 @@
             }else{
                 previewer = new YT.Player('previewer', {
                     height: "390",
-                    width: "640",
+                    width: "350",
                     videoId: video_id,
                     playerVars: {
                         'playsinline': 1,
-                        'controls': 0,
+                        'controls': 1,
                         'rel': 0,
                     },
                     events: {
