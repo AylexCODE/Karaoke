@@ -2,7 +2,7 @@
     $conn;
 
     try{
-        $conn = new PDO("mysql:host=;dbname=", "username", "password");
+        $conn = new PDO("mysql:host=;dbname=;charset=utf8", "username", "password");
     }catch(PDOException $e){
         echo $e->getMessage();
     }
