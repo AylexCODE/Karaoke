@@ -7,9 +7,16 @@
         <script src="../vendor/socketio-4.8.1.min.js"></script>
         <link rel="icon" href="./assets/logo.png" type="image/x-icon">
         <style type="text/css">
+            @font-face {
+                font-family: space-grotesk-regular;
+                url: ("../assets/fonts/SpaceGrotesk-Regular.otf");
+                src: url("../assets/fonts/SpaceGrotesk-Regular.otf");
+            }
+
             * {
                 padding: 0;
                 margin: 0;
+                font-family: space-grotesk-regular;
             }
 
             body {
@@ -35,12 +42,38 @@
             nav > span > button {
                 text-wrap: nowrap;
                 background-color: #07DA63;
+                border: none;
+                border-radius: 10px;
+                padding: 0.3rem 0.6rem;
+                color: #FFF;
+                font-weight: bold;
             }
 
             nav > span:nth-child(2){
                 display: flex;
                 flex-direction: row;
+                align-items: center;
                 gap: 0.5rem;
+            }
+
+            #songList {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            #songList > span {
+                border: 1px solid #303537;
+                width: calc(100% - 3.5rem);
+                margin: 0.5rem 1rem 0.25rem 1rem;
+                border-radius: 10px;
+                padding: 0.5rem 0.75rem;
+            }
+
+            #songList > span > p:last-child {
+                opacity: 0.7;
+                font-size: 0.7rem;
             }
         </style>
         <title>Karaoke Remote</title>
