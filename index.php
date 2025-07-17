@@ -122,7 +122,7 @@
             $.ajax({
                 type: 'post',
                 url: './components/songList.php',
-                data: { filter: s_filter },
+                data: { filter: s_filter, search: "" },
                 success: (data) => {
                     $("#songList").html(data);
                     $(".entriesFound").html(`<span class="${$("#songList").children().length > 0 ? "ok" : "error"}">Found ${$("#songList").children().length} Entries</span>`);
@@ -149,9 +149,9 @@ keepAlive();
 
             socket.on('receivedMessage', (data) => {
                 if(data.message == "AddQueue"){
-                    const { title, artist, videoId } = data.songInfo;
-                    console.log(title, artist, videoId)
-                    addQueue(title, artist, videoId);
+                    const { title, artist, videoId, isVocal } = data.songInfo;
+                    console.log(title, artist, videoId, isVocal);
+                    addQueue(title, artist, videoId, isVocal);
                 }
                 console.log(data);
             });

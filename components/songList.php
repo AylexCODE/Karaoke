@@ -3,6 +3,7 @@
 
     if(isset($_POST)){
         $filter = "";
+        $search = "";
 
         if($_POST["filter"] == "withVocals"){
             $filter = "WHERE songs.isVocal = 1 ";
@@ -10,7 +11,15 @@
             $filter = "WHERE songs.isVocal = 0 ";
         }
 
-        $q = $conn->prepare("SELECT songs.title AS Title, artists.name AS Artist, songs.isVocal as is_vocal, songs.video_id as VideoID FROM songs INNER JOIN artists ON songs.artist_id = artists.id " . $filter . "ORDER BY songs.title");
+        if(!empty($_POST["search"])){
+            if(empty($filter)){
+                $search = "WHERE songs.title LIKE '%" . $_POST["search"] . "%' OR artists.name LIKE '%" . $_POST["search"] . "%' ";
+            }else{
+                $search = " AND songs.title LIKE '%" . $_POST["search"] . "%' OR artists.name LIKE '%" . $_POST["search"] . "%' ";
+            }
+        }
+
+        $q = $conn->prepare("SELECT songs.title AS Title, artists.name AS Artist, songs.isVocal as is_vocal, songs.video_id as VideoID FROM songs INNER JOIN artists ON songs.artist_id = artists.id " . $filter . $search . "ORDER BY songs.title");
         $q->execute();
         $result = $q->fetchAll(PDO::FETCH_ASSOC);
 
@@ -22,7 +31,7 @@
             echo "</span>";
             }
         }else{
-            echo "No Results...";
+            echo "No Result...";
         }
     }
 ?>
