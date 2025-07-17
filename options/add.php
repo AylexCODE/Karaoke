@@ -152,6 +152,7 @@
             ?>
         </datalist>
     </body>
+    <script src="../scripts/socketio.js"></script>
     <script type="text/javascript">
         const title = document.getElementById("title");
         const form = document.getElementsByTagName("form")[0];
