@@ -107,7 +107,7 @@
                 notificationWrapper.style.left = "calc(20% + 1rem)";
             }else{
                 nav.style.left = "-20%";
-                navInfo.style.bottom = "-20%";
+                navInfo.style.bottom = "-25%";
                 mainVideo.style.width = "100%";
                 notificationWrapper.style.left = "calc(0% + 1rem)";
             }

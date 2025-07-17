@@ -360,9 +360,9 @@ main > #videoPlayerWrapper {
 
 article {
     position: absolute;
-    right: 0; bottom: -20%;
+    right: 0; bottom: -23%;
     width: 100%;
-    height: 20%;
+    height: 23%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -375,7 +375,6 @@ article > span:first-child > span:first-child {
     left: -50dvw;
     display: flex;
     flex-direction: row;
-    justify-content: center;
     margin-left: 1rem;
     color: #FFF;
     font-weight: bold;
@@ -400,6 +399,12 @@ article > span:nth-child(2) {
 article > span:first-child > span, #debugInfo > span {
     display: flex;
     flex-direction: row;
+}
+
+#skipBtn {
+    margin-left: 1.5rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid #FFF;
 }
 
 .currentQueue {
@@ -428,10 +433,11 @@ article > span:first-child > span, #debugInfo > span {
 .currentQueue > span > p {
     color: #FFF;
     font-weight: bold;
+    font-size: 1.5rem;
 }
 
 .currentQueue > span > p:nth-child(2){
-    font-size: 0.7rem;
+    font-size: 1rem;
     opacity: 0.8;
 }
 
@@ -454,7 +460,7 @@ article > span:first-child > span, #debugInfo > span {
 
 #notificationWrapper {
     position: absolute;
-    bottom: 21%;
+    bottom: 24%;
     left: calc(0% + 1rem);
     z-index: 99;
     width: fit-content;
