@@ -396,9 +396,30 @@ article > span:nth-child(2) {
     justify-content: flex-end;
 }
 
-article > span:first-child > span, #debugInfo > span {
+article > span:first-child > span, #debugInfo > div > span {
     display: flex;
     flex-direction: row;
+}
+
+#debugInfo > div {
+    width: fit-content;
+    position: absolute;
+    right: 0;
+}
+
+#debugInfo {
+    width: 50%;
+}
+
+#debugInfo:hover {
+    opacity: 1;
+}
+
+#qrCode {
+    display: block;
+    height: 10dvh;
+    width: 10dvh;
+    border: 1px solid #FFF;
 }
 
 #skipBtn {

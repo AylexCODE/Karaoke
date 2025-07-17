@@ -65,9 +65,12 @@
                     </span>
                     <div class="currentQueue"></div>
                 </span>
-                <span id="debugInfo" onclick="$('#debugInfo').css('opacity', '1'); setTimeout(()=>{$('#debugInfo').css('opacity', '0')}, 10000)">
+                <span id="debugInfo">
+                    <div id="debugWrapper">
+                    <span id="qrCode"></span>
                     <span>Connection ID:&nbsp;<p id="connectionID">0000</p>&nbsp;(<p id="connectionStatus">disconnected</p>)</span>
                     <span>Screen Resolution:&nbsp;<p id="screenRes">1920x1080</p></span>
+                    </div>
                 </span>
             </article>
             <div class="area" >
@@ -96,7 +99,7 @@
         const randomId = Math.floor(Math.random() * 9999), debugInfo = document.getElementById("debugInfo");
         
         const in_queue = [];
-        let videoPlayer, isPlaying = false;
+        let videoPlayer, isPlaying = false, songFilter = "noVocals";
         
         function nav_state(state){
             if(state == 1){
@@ -131,6 +134,8 @@
                     $("#songList").html("Error getting songs.");
                 }
             });
+
+            songFilter = s_filter;
         }
 
         window.onload = () => {
@@ -146,6 +151,12 @@ keepAlive();
             }
             
             $("#connectionID").html(randomId);
+
+            socket.on('update', (data) => {
+                if(data.message == "AddSong"){
+                    filterSongs(songFilter);
+                }
+            });
 
             socket.on('receivedMessage', (data) => {
                 if(data.message == "AddQueue"){
