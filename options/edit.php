@@ -199,6 +199,7 @@
             prevartist.value = s_artist;
             isVocal.selectedIndex = (parseInt(isvocal) + 1);
             submitBtn.disabled = true;
+            isVocal.disabled = false;
         }
 
         function submitFormData(){
