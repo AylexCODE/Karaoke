@@ -49,6 +49,60 @@
                 margin-bottom: 0.5rem;
             }
 
+            section {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 60%;
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            #songList {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                overflow-y: scroll;
+            }
+
+            #songList > span {
+                width: calc(100% - 3.5rem - 2px);
+                margin: 0.5rem 1rem 0.25rem 1rem;
+                border-radius: 10px;
+                padding: 0.5rem 0.75rem;
+            }
+
+            #songList > span > p {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            #songList > span > p:last-child {
+                opacity: 0.7;
+                font-size: 0.7rem;
+            }
+
+            .isvocal0 {
+                border: 1px solid #503537;
+                transition: all 1s ease-in;
+            }
+
+            .isvocal1 {
+                border: 1px solid #6C01D6;
+                color: #6C01D6;
+                transition: all 1s ease-in;
+            }
+
+            .isvocal0:active , .isvocal1:active {
+                border-color: #FFF;
+                background-color: #503537;
+                color: #FFF;
+                transition: all 0s ease-in;
+            }
+
             #notif {
                 width: 100%;
                 position: fixed;
@@ -83,7 +137,7 @@
             <label for="artist">Artist</label>
             <input type="text" name="artist" id="artist">
             <label for="genre">Genre</label>
-            <input list="genreList" id="genre">
+            <input list="genreList" name="genre" id="genre" disabled>
             <label for="isvocal">Contains Vocal?</label>
             <select name="isvocal" id="isvocal">
                 <option value="none" selected disabled></option>
@@ -92,14 +146,72 @@
             </select>
             <button type="submit" disabled>Submit</button>
         </form>
+        <section>
+            <p class="entriesFound">Found - Entries</p>
+            <div id="songList"></div>
+        </section>
     </body>
     <script type="text/javascript">
+        const form = document.getElementsByTagName("form")[0];
         const title = document.getElementById("title");
-        const artist = document.getElementById("arist");
-        const genre = document.getElementById("genre");
+        const artist = document.getElementById("artist");
+        // const genre = document.getElementById("genre");
         const isVocal = document.getElementById("isvocal");
-        let formType = "none";
+        let formType = "none", delay;
 
+        function addQueue(s_title, s_artist, s_videoId, isvocal){
+            title.value = s_title;
+            artist.value = s_artist;
+            isVocal.selectedIndex = (parseInt(isvocal) + 1);
+        }
 
+        function submitFormData(){
+            const data = new FormData(form);
+
+            $.ajax({
+                type: "POST",
+                url: "./actions.php",
+                data: {
+                    title: data.get("title"),
+                    artist: data.get("artist"),
+                    //genre: data.get("genre"),
+                    isvocal: data.get("isvocal")
+                    },
+                success: function(response){
+                    console.log(response);
+                },
+                error: function (error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function getSongs(q){
+            $.ajax({
+                type: 'post',
+                url: '../components/songList.php',
+                data: { filter: "none", search: q },
+                success: (data) => {
+                    $("#songList").html(data);
+                    $(".entriesFound").html(`<span class="${$("#songList").children().length > 0 ? "ok" : "error"}">Found ${$("#songList").children().length} Entries</span>`);
+                },
+                error: () => {
+                    $("#songList").html("Error getting songs.");
+                }
+            });
+        }
+
+        function search(q){
+            songSearch = q;
+            
+            clearTimeout(delay);
+            delay = setTimeout(() => {
+                getSongs(q);
+            }, 1000);
+        }
+
+        window.onload = () => {
+            getSongs("");
+        }
     </script>
 </html>
