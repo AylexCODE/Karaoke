@@ -39,6 +39,8 @@
                 <span class="filterAll" onclick="filterSongs('all')">All</span>
                 <span class="filterWithVocals" onclick="filterSongs('withVocals')">With Vocals</span>
                 <span class="filerWithNoVocals" onclick="filterSongs('noVocals')">No Vocals</span>
+                <span class="scrollUpBtn" onclick="scrollSongs('up')">&uarr;</span>
+                <span class="scrollDownBtn" onclick="scrollSongs('down')">&darr;</span>
                 </div>
             </nav>
             <main>
@@ -91,6 +93,7 @@
     </body>
     <script type="text/javascript" src="./scripts/socketio.js"></script>
     <script type="text/javascript">
+        const songList = document.getElementById("songList");
         const nav = document.getElementsByTagName("nav")[0];
         const navInfo = document.getElementsByTagName("article")[0];
         const mainVideo = document.getElementsByTagName("main")[0];
@@ -138,6 +141,24 @@
             songFilter = s_filter;
         }
 
+        function scrollSongs(direction){
+            const currentScroll = songList.scrollTop;
+
+            if(direction == "down"){
+                songList.scrollTo({
+                    top: currentScroll + songList.offsetHeight*0.75,
+                    left: 0,
+                    behavior: "smooth"
+                });
+            }else if(direction == "up"){
+                songList.scrollTo({
+                    top: currentScroll - songList.offsetHeight*0.75,
+                    left: 0,
+                    behavior: "smooth"
+                });
+            }
+        }
+
         window.onload = () => {
             filterSongs("noVocals");
 
@@ -180,7 +201,7 @@ keepAlive();
                     playerVars: {
                         'playsinline': 1,
                         'controls': 0,
-                        'rel': 0,
+                        'rel': 0
                     },
                     events: {
                         'onReady': (event) => {

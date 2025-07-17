@@ -227,7 +227,19 @@ nav > span > span {
     width: 100%;
     height: 100%;
     overflow-y: scroll;
+    /*
+    &::-webkit-scrollbar {
+          display: block;
+          width: 10px;
+          background-color: #FFFFFF40;
+        }
+        
+    &::-webkit-scrollbar-thumb {
+          background: #12345670;
+        }
+    }*/
 }
+
 
 #songList > span {
     display: block;
