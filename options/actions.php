@@ -1,6 +1,44 @@
 <?php
     require("../database/db_conn.php");
 
+    if(isset($_POST["videoid"])){
+        $title = $_POST["title"];
+        $artist = $_POST["artist"];
+        $isVocal = $_POST["isvocal"];
+        $videoId = $_POST["videoid"];
+
+        if(trim($title) == ""){
+            try{
+                $q = $conn->prepare("UPDATE artists SET name = ? WHERE name = ?");
+                $q->execute([$artist, $_POST["prevartist"]]);
+                echo "Artist Name Changed";
+            }catch(PDOException $e){
+                echo $e;
+            }
+        }else{
+            try{
+                $getArtistId = $conn->prepare("SELECT id FROM artists WHERE name = ?");
+                $getArtistId->execute([$artist]);
+                    $artistId = $getArtistId->fetch(PDO::FETCH_ASSOC)["id"];
+                    
+                if($artistId){
+                    try{
+                        $q = $conn->prepare("UPDATE songs SET title = ?, artist_id = ?, isVocal = ? WHERE video_id = ?");
+                        $q->execute([$title, $artistId, $isVocal, $videoId]);
+                    
+                        echo "Song Information Changed";
+                    }catch(PDOException $f){
+                        echo $f;
+                    }
+                }else{
+                    echo "No Such Artist";
+                }
+            }catch(PDOException $e){
+                echo $e;
+            }
+        }
+    }
+
     if(isset($_POST["video_id"])){
         $title = $_POST["title"];
         $artist = $_POST["artist"];

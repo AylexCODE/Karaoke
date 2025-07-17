@@ -142,6 +142,17 @@
             .error {
                 border-color: #DF2C14;
             }
+
+            @keyframes slideDown {
+                0%, 100% {
+                    top: 0dvh;
+                    opacity: 0;
+                }
+                20%, 80% {
+                    top: 21dvh;
+                    opacity: 1;
+                }
+            }
         </style>
         <title>JKaraoke Dev</title>
     </head>
@@ -161,7 +172,8 @@
                 <option value=1>True</option>
             </select>
             <input type="hidden" name="videoid" id="videoid">
-            <button type="submit" id="submit" disabled>Submit</button>
+            <input type="hidden" name="prevartist" id="prevartist">
+            <button type="submit" id="submit" onclick="submitFormData()" disabled>Submit</button>
         </form>
         <section>
             <p class="entriesFound">Found - Entries</p>
@@ -173,15 +185,18 @@
         const title = document.getElementById("title");
         const artist = document.getElementById("artist");
         const videoId = document.getElementById("videoid");
+        const prevArtist = document.getElementById("prevartist");
         // const genre = document.getElementById("genre");
         const isVocal = document.getElementById("isvocal");
         const submitBtn = document.getElementById("submit");
+        const notification = document.getElementById("notif");
         let formType = "none", delay;
 
         function addQueue(s_title, s_artist, s_videoId, isvocal){
             videoId.value = s_videoId;
             title.value = s_title;
             artist.value = s_artist;
+            prevartist.value = s_artist;
             isVocal.selectedIndex = (parseInt(isvocal) + 1);
             submitBtn.disabled = true;
         }
@@ -195,11 +210,18 @@
                 data: {
                     title: data.get("title"),
                     artist: data.get("artist"),
+                    prevartist: data.get("prevartist"),
                     //genre: data.get("genre"),
-                    isvocal: data.get("isvocal")
+                    isvocal: data.get("isvocal"),
+                    videoid: data.get("videoid")
                     },
                 success: function(response){
                     console.log(response);
+                    if(response == "Artist Name Changed" || response == "Song Information Changed"){
+                        notification.innerHTML = `<span class="success">${response}</span>`;
+                        form.reset();
+                        getSongs("");
+                    }
                 },
                 error: function (error){
                     console.log(error);
