@@ -103,6 +103,22 @@
                 transition: all 0s ease-in;
             }
 
+            button {
+                width: 100%;
+                padding: 0.3rem 0.6rem;
+                background-color: #07DA63;
+                text-transform: uppercase;
+                border: none;
+                border-radius: 0.7rem;
+                font-size: 0.8rem;
+                font-weight: bold;
+                color: #FFF;
+            }
+
+            button:disabled {
+                background-color: #E8E9EB;
+            }
+
             #notif {
                 width: 100%;
                 position: fixed;
@@ -133,18 +149,19 @@
         <span id="notif"></span>
         <form onsubmit="return false">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title">
+            <input type="text" name="title" id="title" oninput="checkSong('title')">
             <label for="artist">Artist</label>
-            <input type="text" name="artist" id="artist">
+            <input type="text" name="artist" id="artist" oninput="checkSong('artist')">
             <label for="genre">Genre</label>
-            <input list="genreList" name="genre" id="genre" disabled>
+            <input list="genreList" name="genre" id="genre" disabled oninput="checkSong('genre')">
             <label for="isvocal">Contains Vocal?</label>
-            <select name="isvocal" id="isvocal">
+            <select name="isvocal" id="isvocal" onchange="checkSong('vocal')">
                 <option value="none" selected disabled></option>
                 <option value=0>False</option>
                 <option value=1>True</option>
             </select>
-            <button type="submit" disabled>Submit</button>
+            <input type="hidden" name="videoid" id="videoid">
+            <button type="submit" id="submit" disabled>Submit</button>
         </form>
         <section>
             <p class="entriesFound">Found - Entries</p>
@@ -155,14 +172,18 @@
         const form = document.getElementsByTagName("form")[0];
         const title = document.getElementById("title");
         const artist = document.getElementById("artist");
+        const videoId = document.getElementById("videoid");
         // const genre = document.getElementById("genre");
         const isVocal = document.getElementById("isvocal");
+        const submitBtn = document.getElementById("submit");
         let formType = "none", delay;
 
         function addQueue(s_title, s_artist, s_videoId, isvocal){
+            videoId.value = s_videoId;
             title.value = s_title;
             artist.value = s_artist;
             isVocal.selectedIndex = (parseInt(isvocal) + 1);
+            submitBtn.disabled = true;
         }
 
         function submitFormData(){
@@ -186,6 +207,24 @@
             });
         }
 
+        function checkSong(type){
+            if(artist.value.trim() == ""){
+                submitBtn.disabled = true;
+                return;
+            }
+
+            submitBtn.disabled = false;
+            switch(type){
+                case "title":
+                    if(title.value.trim() == ""){
+                        isVocal.disabled = true;
+                    }else{
+                        isVocal.disabled = false;
+                    }
+                    break;
+            }
+        }
+
         function getSongs(q){
             $.ajax({
                 type: 'post',
@@ -201,14 +240,14 @@
             });
         }
 
-        function search(q){
+        /*function search(q){
             songSearch = q;
             
             clearTimeout(delay);
             delay = setTimeout(() => {
                 getSongs(q);
             }, 1000);
-        }
+        }*/
 
         window.onload = () => {
             getSongs("");
