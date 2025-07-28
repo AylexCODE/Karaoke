@@ -282,34 +282,48 @@ nav > span > span {
     color: #FFF;
 }
 
-#tools {
+#tools, #tools > span {
     width: 100%;
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
 }
 
+#tools {
+    flex-direction: column;
+}
+
 #tools > span {
+    flex-direction: row;
+}
+
+#tools > span > span {
     padding: 0.5rem 1rem;
     border: 1px solid black;
     border-radius: 10px;
-    margin: 0.5rem 0rem 0.5rem 0.5rem;
+    margin: 0.5rem 0rem 0rem 0.5rem;
     transition: all 0.2s ease-in;
 }
 
-#tools > .active {
+#tools > span > .active {
     transition: all 0s ease-in;
     border: 1px solid #07DA36;
-    color: #07DA36;
+    color: #FFF;
     font-weight: bold;
     background-color: #FFFFFF70;
 }
 
-#tools > span:active {
+#tools > span > span:active {
     background-color: #503537;
     color: #FFF;
     border: 1px solid #C601D6;
     transition: all 0s ease-in;
+}
+
+#tools > span:last-child > span:hover {
+    color: #07DA36;
+    font-weight: bold;
+    border-color: FFF;
+    background-color: #FFFFFF50;
 }
 
 main {
@@ -432,7 +446,7 @@ article > span:first-child > span, #debugInfo > div > span {
 #debugInfo > div {
     width: fit-content;
     position: absolute;
-    right: 0;
+    right: 10px;
 }
 
 #debugInfo {
@@ -451,9 +465,13 @@ article > span:first-child > span, #debugInfo > div > span {
 }
 
 #skipBtn {
-    margin-left: 1.5rem;
+    margin-left: calc(1.5rem + 2px);
     padding-left: 1.5rem;
-    border-left: 1px solid #FFF;
+    border-left: 2px solid #FFF;
+}
+
+#skipBtn:hover {
+    color: #FF2222;
 }
 
 .currentQueue {
@@ -572,14 +590,6 @@ article > span:first-child > span, #debugInfo > div > span {
     to {
         width: 0%;
     }
-}
-
-#skipBtn {
-    margin-left: 3rem;
-}
-
-#skipBtn:hover {
-    color: #FF2222;
 }
 
 .area{ 
