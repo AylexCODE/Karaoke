@@ -19,8 +19,8 @@
             <span>
             </span>
             <span>
-                <span>
-                    <p>Found&nbsp;<p class="songCount"></p>&nbsp;Songs</p>
+                <span class="songFoundLabel">
+                    <p>Found&nbsp;<span class="songCount"></span>&nbsp;Songs</p>
                 </span>
                 <span>
                     <span class="loadingBar"></span>
@@ -35,10 +35,10 @@
                     <p class="entriesFound">Found - Entries</p>
                 </span>
                 <div id="songList">Loading...</div>
-                <div id="filters">
+                <div id="tools">
                 <span class="filterAll" onclick="filterSongs('all')">All</span>
                 <span class="filterWithVocals" onclick="filterSongs('withVocals')">With Vocals</span>
-                <span class="filerWithNoVocals" onclick="filterSongs('noVocals')">No Vocals</span>
+                <span class="filterWithNoVocals active" onclick="filterSongs('noVocals')">No Vocals</span>
                 <span class="scrollUpBtn" onclick="scrollSongs('up')">&uarr;</span>
                 <span class="scrollDownBtn" onclick="scrollSongs('down')">&darr;</span>
                 </div>
@@ -139,6 +139,22 @@
             });
 
             songFilter = s_filter;
+
+            document.querySelector(".filterAll").classList.remove("active");
+            document.querySelector(".filterWithVocals").classList.remove("active");
+            document.querySelector(".filterWithNoVocals").classList.remove("active");
+
+            switch(s_filter){
+                case "all":
+                    document.querySelector(".filterAll").classList.add("active");
+                    break;
+                case "noVocals":
+                    document.querySelector(".filterWithNoVocals").classList.add("active");
+                    break;
+                case "withVocals":
+                    document.querySelector(".filterWithVocals").classList.add("active");
+                    break;
+            }
         }
 
         function scrollSongs(direction){
