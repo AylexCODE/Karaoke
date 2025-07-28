@@ -36,11 +36,15 @@
                 </span>
                 <div id="songList">Loading...</div>
                 <div id="tools">
-                <span class="filterAll" onclick="filterSongs('all')">All</span>
-                <span class="filterWithVocals" onclick="filterSongs('withVocals')">With Vocals</span>
-                <span class="filterWithNoVocals active" onclick="filterSongs('noVocals')">No Vocals</span>
-                <span class="scrollUpBtn" onclick="scrollSongs('up')">&uarr;</span>
-                <span class="scrollDownBtn" onclick="scrollSongs('down')">&darr;</span>
+                    <span>
+                        <span class="filterAll" onclick="filterSongs('all')">All</span>
+                        <span class="filterWithVocals" onclick="filterSongs('withVocals')">With Vocals</span>
+                        <span class="filterWithNoVocals active" onclick="filterSongs('noVocals')">No Vocals</span>
+                    </span>
+                    <span>
+                        <span class="scrollUpBtn" onmousemove="scrollSongs('up')" onclick="scrollSongs('up')">&uarr;</span>
+                        <span class="scrollDownBtn" onmousemove="scrollSongs('down')" onclick="scrollSongs('down')">&darr;</span>
+                    </span>
                 </div>
             </nav>
             <main>
@@ -263,6 +267,8 @@ keepAlive();
                 mainMessage.style.display = "none";
                 const song_info = in_queue.shift();
                 set_player(song_info.videoId);
+                mainMessage.innerHTML = `Now Playing<br>${song_info.title}<br>by ${song_info.artist}`;
+                
                 isPlaying = true;
 
                 document.querySelector(".currentQueue").classList.add("active");
@@ -270,8 +276,10 @@ keepAlive();
             
             if(in_queue.length == 0){
                 document.querySelector("article > span > span:first-child").style.left = "-50dvw";
+                mainMessage.innerHTML = `Player is IDLE`;
             }else{
                 document.querySelector("article > span > span:first-child").style.left = "0dvw";
+
             }
 
             let queue_elements = "";
@@ -284,15 +292,15 @@ keepAlive();
 
         const main_msg_template = "START THE PARTY!!!";
         const main_msg_write_delay = [100, 100, 150, 100, 100, 100, 50, 100, 100, 100, 150, 50, 100, 100, 150, 50, 100, 200];
-        // function set_mainMessage(i){
-        //     if(i == 18) return;
-        //     setTimeout(() => {
-        //         mainMessage.innerHTML = main_msg_template.slice(0, i);
-        //         set_mainMessage(++i);
-        //     }, main_msg_write_delay[i]);
-        // }
+         function set_mainMessage(i){
+             if(i == 18) return;
+             setTimeout(() => {
+                 mainMessage.innerHTML = main_msg_template.slice(0, i);
+                 set_mainMessage(++i);
+             }, main_msg_write_delay[i]);
+         }
 
-        //setTimeout(() => set_mainMessage(0), 7000);
+        setTimeout(() => set_mainMessage(0), 7000);
 
         function yt_player_logging(event){
             switch(event){
