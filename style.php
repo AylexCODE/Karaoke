@@ -82,7 +82,7 @@ body {
 }
 
 .loadingScreen > span:nth-child(2) > span:nth-child(2){
-    height: 1rem;
+    height: 2rem;
     opacity: 0;
     width: 80%;
     margin-top: 0.5rem;
@@ -101,6 +101,10 @@ body {
 .loadingScreen > span:nth-child(2) > span {
     display: flex;
     flex-direction: row;
+}
+
+.songFoundLabel > p, .songFoundLabel > p > span {
+    font-size: 3rem;
 }
 
 @keyframes loading_anim {
@@ -278,22 +282,34 @@ nav > span > span {
     color: #FFF;
 }
 
-#filters {
+#tools {
     width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
 
-#filters > span {
+#tools > span {
     padding: 0.5rem 1rem;
     border: 1px solid black;
     border-radius: 10px;
     margin: 0.5rem 0rem 0.5rem 0.5rem;
+    transition: all 0.2s ease-in;
 }
 
-#filters > active {
-    border: 1px solid green;
+#tools > .active {
+    transition: all 0s ease-in;
+    border: 1px solid #07DA36;
+    color: #07DA36;
+    font-weight: bold;
+    background-color: #FFFFFF70;
+}
+
+#tools > span:active {
+    background-color: #503537;
+    color: #FFF;
+    border: 1px solid #C601D6;
+    transition: all 0s ease-in;
 }
 
 main {
