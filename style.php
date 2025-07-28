@@ -170,7 +170,7 @@ body {
     left: 0%; top: 0;
     width: 20%;
     height: 100%;
-    z-index: 4;
+    z-index: 5;
 }
 
 nav {
@@ -282,7 +282,7 @@ nav > span > span {
     color: #FFF;
 }
 
-#tools, #tools > span {
+#tools, #tools > span:not(#currentlyPlaying){
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -296,7 +296,7 @@ nav > span > span {
     flex-direction: row;
 }
 
-#tools > span > span {
+#tools > span > span, #currentlyPlaying {
     padding: 0.5rem 1rem;
     border: 1px solid black;
     border-radius: 10px;
@@ -324,6 +324,30 @@ nav > span > span {
     font-weight: bold;
     border-color: FFF;
     background-color: #FFFFFF50;
+}
+
+#currentlyPlaying {
+    width: calc(100% - 1rem);
+    border-color: #FF2222;
+    color: #FF2222;
+}
+
+#currentlyPlaying > p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#currentlyPlaying > p:first-child {
+    opacity: 0.7;
+}
+
+#currentlyPlaying > p:not(:first-child, :last-child) {
+    font-size: 1.5rem;
+}
+
+#currentlyPlaying > p:last-child {
+    opacity: 0.7;
 }
 
 main {
@@ -397,7 +421,7 @@ main > #videoPlayerWrapper {
     right: 0; bottom: 0;
     width: 86.7%;
     height: 20%;
-    z-index: 4;
+    z-index: 3;
 }
 
 article {
@@ -409,7 +433,7 @@ article {
     flex-direction: row;
     justify-content: space-between;
     transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-    z-index: 5;
+    z-index: 4;
 }
 
 article > span:first-child > span:first-child {
@@ -457,10 +481,10 @@ article > span:first-child > span, #debugInfo > div > span {
     opacity: 1;
 }
 
-#qrCode {
+#qrCodeWrapper {
     display: block;
-    height: 10dvh;
-    width: 10dvh;
+    height: 12dvh;
+    width: 12dvh;
     border: 1px solid #FFF;
 }
 
