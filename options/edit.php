@@ -222,6 +222,9 @@
                         notification.innerHTML = `<span class="success">${response}</span>`;
                         form.reset();
                         getSongs("");
+                    }else{
+                        if(response.includes("No Such Artist")) response = "No Such Artist";
+                        notification.innerHTML = `<span class="error">${response}</span>`;
                     }
                 },
                 error: function (error){
