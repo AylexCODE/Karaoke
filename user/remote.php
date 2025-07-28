@@ -253,6 +253,16 @@
         
         window.onload = () => {
             getSongs("");
+
+            let urlParams = window.location.search;
+            urlParams = new URLSearchParams(urlParams);
+
+            if(urlParams.has("id")){
+                const paramId = urlParams.get("id");
+                setId(paramId);
+                console.log(paramId);
+            }
+            console.log(urlParams);
         }
     </script>
 </html>
