@@ -11,6 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="./vendor/jquery-3.7.1.min.js"></script>
         <script src="./vendor/socketio-4.8.1.min.js"></script>
+        <script src="./vendor/qrcode-1.0.0.min.js"></script>
         <link rel="icon" href="./assets/images/logo.svg" type="image/x-icon">
         <title>Karaoke</title>
     </head>
@@ -36,6 +37,7 @@
                 </span>
                 <div id="songList">Loading...</div>
                 <div id="tools">
+                    <span id="currentlyPlaying"></span>
                     <span>
                         <span class="filterAll" onclick="filterSongs('all')">All</span>
                         <span class="filterWithVocals" onclick="filterSongs('withVocals')">With Vocals</span>
@@ -73,9 +75,13 @@
                 </span>
                 <span id="debugInfo">
                     <div id="debugWrapper">
-                    <span id="qrCode"></span>
-                    <span>Connection ID:&nbsp;<p id="connectionID">0000</p>&nbsp;(<p id="connectionStatus">disconnected</p>)</span>
-                    <span>Screen Resolution:&nbsp;<p id="screenRes">1920x1080</p></span>
+                        <span>Click to show Contributors</span>
+                        <span>Scan QRCode to access remote</span>
+                        <span id="qrCodeWrapper">
+                            <span id="qrCode"></span>
+                        </span>
+                        <span>Connection ID:&nbsp;<p id="connectionID">0000</p>&nbsp;(<p id="connectionStatus">disconnected</p>)</span>
+                        <span>Screen Resolution:&nbsp;<p id="screenRes">1920x1080</p></span>
                     </div>
                 </span>
             </article>
@@ -104,6 +110,7 @@
         const mainMessage = document.getElementById("mainMessage");
         const notificationWrapper = document.getElementById("notificationWrapper");
         const randomId = Math.floor(Math.random() * 9999), debugInfo = document.getElementById("debugInfo");
+        const currentlyPlaying = document.getElementById("currentlyPlaying");
         
         const in_queue = [];
         let videoPlayer, isPlaying = false, songFilter = "noVocals";
@@ -209,6 +216,15 @@ keepAlive();
             });
 
             console.log(randomId);
+            const qrcode = new QRCode(document.getElementById("qrCode"), {
+                text: `jkaraoke.42web.io/user/remote?id=${randomId}`,
+                width: document.getElementById("qrCodeWrapper").offsetWidth,
+                height: document.getElementById("qrCodeWrapper").offsetHeight,
+                colorDark: "#000000",
+                colorLight: "#FFFFFF",
+                correctionLevel: QRCode.CorrectLevel.H
+            });
+
             setInterval(keepAlive, 30000);
         }
         
@@ -241,6 +257,7 @@ keepAlive();
                             }else if(event.data == YT.PlayerState.PLAYING){
                                 $("#videoPlayerWrapper").css("visibility", "visible");
                                 document.querySelector(".currentQueue").classList.remove("active");
+                                mainMessage.style.display = "none";
                             }
                         }
                     }
@@ -264,11 +281,11 @@ keepAlive();
 
         function setQueue(next){
             if((in_queue.length > 0 && !isPlaying) || next){
-                mainMessage.style.display = "none";
+                mainMessage.style.display = "block";
                 const song_info = in_queue.shift();
                 set_player(song_info.videoId);
-                mainMessage.innerHTML = `Now Playing<br>${song_info.title}<br>by ${song_info.artist}`;
-                
+                mainMessage.innerHTML = `NOW PLAYING" ${song_info.title} "<br>by ${song_info.artist}`;
+                currentlyPlaying.innerHTML = `<p>CURRENTLY PLAYING</p><p>${song_info.title}</p><p>by ${song_info.artist}</p>`;
                 isPlaying = true;
 
                 document.querySelector(".currentQueue").classList.add("active");
@@ -276,7 +293,10 @@ keepAlive();
             
             if(in_queue.length == 0){
                 document.querySelector("article > span > span:first-child").style.left = "-50dvw";
-                mainMessage.innerHTML = `Player is IDLE`;
+                if(!isPlaying){
+                    mainMessage.innerHTML = `PLAYER IS IDLE`;
+                currentlyPlaying.innerHTML = "";
+                }
             }else{
                 document.querySelector("article > span > span:first-child").style.left = "0dvw";
 
