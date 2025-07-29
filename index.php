@@ -251,6 +251,7 @@ keepAlive();
                                 mainMessage.style.display = "block";
                                 $("#videoPlayerWrapper").css("visibility", "hidden");
                                 isPlaying = false;
+                                setQueue(false);
                             }else if(event.data == YT.PlayerState.ENDED){
                                 $("#videoPlayerWrapper").css("visibility", "hidden");
                                 setQueue(true);
@@ -258,6 +259,7 @@ keepAlive();
                                 $("#videoPlayerWrapper").css("visibility", "visible");
                                 document.querySelector(".currentQueue").classList.remove("active");
                                 mainMessage.style.display = "none";
+                                $("#playingTime").html(`&nbsp;|&nbsp;${(videoPlayer.getDuration() / 60).toFixed(0)}m ${(videoPlayer.getDuration() % 60).toFixed(0)}s`);
                             }
                         }
                     }
@@ -284,8 +286,8 @@ keepAlive();
                 mainMessage.style.display = "block";
                 const song_info = in_queue.shift();
                 set_player(song_info.videoId);
-                mainMessage.innerHTML = `NOW PLAYING" ${song_info.title} "<br>by ${song_info.artist}`;
-                currentlyPlaying.innerHTML = `<p>CURRENTLY PLAYING</p><p>${song_info.title}</p><p>by ${song_info.artist}</p>`;
+                mainMessage.innerHTML = `NOW PLAYING<br${song_info.title}<br>by ${song_info.artist}`;
+                currentlyPlaying.innerHTML = `<p>CURRENTLY PLAYING<span id="playingTime"></span></p><p>${song_info.title}</p><p>by ${song_info.artist}</p>`;
                 isPlaying = true;
 
                 document.querySelector(".currentQueue").classList.add("active");
