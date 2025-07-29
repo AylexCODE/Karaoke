@@ -183,7 +183,7 @@
         function setId(id){
             clearTimeout(delay);
             delay = setTimeout(() => {
-                socket.emit('connectToConnection', id, (response) => {
+                socket.emit('connectToConnection', {type:'client', id: id}, (response) => {
                     $("#connectionIdStatus").html(response.status == "Connected" ? response.status : "Invalid");
                     $("#connectionId").html(response.status);
                     response.status == "Connected" ? hostId = id : hostId = "NaN";
@@ -263,6 +263,12 @@
                 console.log(paramId);
             }
             console.log(urlParams);
+
+            socket.on('update', (data) => {
+                if(data.message == "AddSong"){
+                    getSongs("");
+                }
+            });
         }
     </script>
 </html>
