@@ -191,7 +191,9 @@
 
 keepAlive();
             notificationWrapper.innerHTML = "";
-            socket.emit('createConnection', randomId);
+            socket.emit('connectToConnection', {type: 'server', id: randomId}, (response) => {
+                console.log(response);
+            });
 
             $("#screenRes").html(`${window.innerWidth}x${window.innerHeight}`);
             window.onresize = () => {
