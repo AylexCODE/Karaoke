@@ -470,7 +470,10 @@ article > span:first-child > span, #debugInfo > div > span {
 #debugInfo > div {
     width: fit-content;
     position: absolute;
-    right: 10px;
+    right: 3px;
+    padding: 8px;
+    border-radius: 10px;
+    background-color: #00000040;
 }
 
 #debugInfo {
