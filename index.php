@@ -109,7 +109,7 @@
         const mainVideo = document.getElementsByTagName("main")[0];
         const mainMessage = document.getElementById("mainMessage");
         const notificationWrapper = document.getElementById("notificationWrapper");
-        const randomId = Math.floor(Math.random() * 9999), debugInfo = document.getElementById("debugInfo");
+        let randomId = Math.floor(Math.random() * 9999), debugInfo = document.getElementById("debugInfo");
         const currentlyPlaying = document.getElementById("currentlyPlaying");
         
         const in_queue = [];
@@ -186,21 +186,33 @@
             }
         }
 
-        window.onload = () => {
-            filterSongs("noVocals");
-
-keepAlive();
-            notificationWrapper.innerHTML = "";
-            socket.emit('connectToConnection', {type: 'server', id: randomId}, (response) => {
+        function connect(){
+            console.log("Connecting to server");
+            socket.emit('connectToConnection', {type: 'server', id: 129}, (response) => {
+                if(response.status == "ok"){
+                    $("#connectionStatus").html("connected");
+                    randomId = response.id;
+                    $("#connectionID").html(response.id);
+                }else{
+                    $("#connectionStatus").html("disconnected");
+                }
                 console.log(response);
             });
+        }
 
-            $("#screenRes").html(`${window.innerWidth}x${window.innerHeight}`);
+            window.onload = () => {
+                filterSongs("noVocals");
+
+                keepAlive();
+
+                notificationWrapper.innerHTML = "";
+
+                $("#screenRes").html(`${window.innerWidth}x${window.innerHeight}`);
             window.onresize = () => {
                 $("#screenRes").html(`${window.innerWidth}x${window.innerHeight}`);
             }
             
-            $("#connectionID").html(randomId);
+            //$("#connectionID").html(randomId);
 
             socket.on('update', (data) => {
                 if(data.message == "AddSong"){
