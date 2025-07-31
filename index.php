@@ -193,6 +193,16 @@
                     $("#connectionStatus").html("connected");
                     randomId = response.id;
                     $("#connectionID").html(response.id);
+
+                    console.log(randomId);
+                    const qrcode = new QRCode(document.getElementById("qrCode"), {
+                        text: `jkaraoke.42web.io/user/remote?id=${randomId}`,
+                        width: document.getElementById("qrCodeWrapper").offsetWidth,
+                        height: document.getElementById("qrCodeWrapper").offsetHeight,
+                        colorDark: "#000000",
+                        colorLight: "#FFFFFF",
+                        correctionLevel: QRCode.CorrectLevel.H
+                    });
                 }else{
                     $("#connectionStatus").html("disconnected");
                 }
@@ -200,7 +210,7 @@
             });
         }
 
-            window.onload = () => {
+        window.onload = () => {
                 filterSongs("noVocals");
 
                 keepAlive();
@@ -227,16 +237,6 @@
                     addQueue(title, artist, videoId, isVocal);
                 }
                 console.log(data);
-            });
-
-            console.log(randomId);
-            const qrcode = new QRCode(document.getElementById("qrCode"), {
-                text: `jkaraoke.42web.io/user/remote?id=${randomId}`,
-                width: document.getElementById("qrCodeWrapper").offsetWidth,
-                height: document.getElementById("qrCodeWrapper").offsetHeight,
-                colorDark: "#000000",
-                colorLight: "#FFFFFF",
-                correctionLevel: QRCode.CorrectLevel.H
             });
 
             setInterval(keepAlive, 30000);
