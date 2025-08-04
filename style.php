@@ -27,10 +27,13 @@ body {
     width: 100dvw;
     /*background-color: #FEFFFE;*/
     overflow: hidden;
-    background: linear-gradient(315deg, rgba(101,0,94,1) 3%, rgba(60,132,206,1) 38%, rgba(48,238,226,1) 68%, rgba(255,25,25,1) 98%);
+    /*background: linear-gradient(315deg, rgba(101,0,94,1) 3%, rgba(60,132,206,1) 38%, rgba(48,238,226,1) 68%, rgba(255,25,25,1) 98%);
     animation: gradient 120s ease infinite;
     background-size: 400% 400%;
-    background-attachment: fixed;
+    background-attachment: fixed;*/
+    background-image: url("./assets/images/bg.jpg");
+    background-size: cover;
+    background-position: center;
 }
 
 @keyframes gradient {
@@ -217,14 +220,15 @@ nav > span > span {
     padding-block: 3%;
     padding-inline: 7%;
     border-radius: 15px;
+    color: #FFF;
 }
 
 .entriesFound > .error {
-    background-color: #FFFF0020;
+    background-color: #FF222220;
 }
 
 .entriesFound > .ok {
-    background-color: #00FFFF20;
+    background-color: #FFFFFF20;
 }
 
 #songList {
@@ -286,6 +290,7 @@ nav > span > span {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    color: #FFF;
 }
 
 #tools {
@@ -298,10 +303,11 @@ nav > span > span {
 
 #tools > span > span, #currentlyPlaying {
     padding: 0.5rem 1rem;
-    border: 1px solid black;
+    border: 1px solid #FFF;
     border-radius: 10px;
     margin: 0.5rem 0rem 0rem 0.5rem;
     transition: all 0.2s ease-in;
+    background-color: #FFFFFF10;
 }
 
 #tools > span > .active {
@@ -328,8 +334,8 @@ nav > span > span {
 
 #currentlyPlaying {
     width: calc(100% - 1rem);
-    border-color: #FF2222;
-    color: #FF2222;
+    border-color: #4EE06E;
+    color: #4EE06E;
 }
 
 #currentlyPlaying > p {
